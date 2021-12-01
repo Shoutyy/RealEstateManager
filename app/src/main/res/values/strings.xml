@@ -1,3 +1,10 @@
 <resources>
+
     <string name="app_name">RealEstateManager</string>
+
+    //toolbar menu
+    <string name="search">Search</string>
+    <string name="create">Create</string>
+    <string name="add">Add</string>
+
 </resources>
