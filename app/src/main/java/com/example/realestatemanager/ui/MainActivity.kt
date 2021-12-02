@@ -9,8 +9,13 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import kotlinx.android.synthetic.main.activity_main.*
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import com.example.realestatemanager.database.DummyContent
+import com.example.realestatemanager.ui.property.PropertyListFragment
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         this.configureToolbar()
         this.configureDrawerLayout()
         this.configureNavigationView()
+        this.initFragment()
     }
 
     private fun configureToolbar() = setSupportActionBar(toolbar)
@@ -54,4 +60,18 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
+
+    //fragment
+    private fun initFragment() {
+        val propertyListFragment: PropertyListFragment = PropertyListFragment.newInstance()
+        val fragmentManager: FragmentManager = supportFragmentManager
+        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.add(R.id.activity_main_container, propertyListFragment).commit()
+    }
+
+    override fun onListFragmentInteraction(item: DummyContent.DummyItem?) {
+
+    }
 }
+
+

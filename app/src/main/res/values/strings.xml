@@ -12,4 +12,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="temp">temp</string>
 
+    //property list
+    <string name="type">type</string>
+    <string name="localisation">localisation</string>
+    <string name="price">price</string>
+
 </resources>
