@@ -9,9 +9,14 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import kotlinx.android.synthetic.main.activity_main.*
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import android.content.Intent
+import android.util.Property
+import kotlinx.android.synthetic.main.toolbar.*
 import com.example.realestatemanager.database.DummyContent
+import com.example.realestatemanager.ui.property.PropertyDetailActivity
+import com.example.realestatemanager.ui.property.PropertyDetailFragment
 import com.example.realestatemanager.ui.property.PropertyListFragment
 
 
@@ -23,10 +28,10 @@ class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInt
         this.configureToolbar()
         this.configureDrawerLayout()
         this.configureNavigationView()
-        this.initFragment()
+        this.initAndAddFragment()
     }
 
-    private fun configureToolbar() = setSupportActionBar(toolbar)
+    private fun configureToolbar() { setSupportActionBar(toolbar) }
 
     //inflate the menu and add it to the Toolbar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -62,15 +67,36 @@ class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInt
     }
 
     //fragment
-    private fun initFragment() {
-        val propertyListFragment: PropertyListFragment = PropertyListFragment.newInstance()
-        val fragmentManager: FragmentManager = supportFragmentManager
-        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.add(R.id.activity_main_container, propertyListFragment).commit()
+    private var fragmentTransaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+    private lateinit var fragmentPropertyList: PropertyListFragment
+    private var fragmentPropertyDetail: PropertyDetailFragment? = null
+    private var containerPropertyDetail: Fragment? = null
+
+    private fun initAndAddFragment() {
+        fragmentPropertyList = PropertyListFragment.newInstance()
+        fragmentTransaction.add(R.id.activity_property_list_container, fragmentPropertyList)
+        containerPropertyDetail = supportFragmentManager.findFragmentById(R.id.activity_property_detail_container)
+        if (containerPropertyDetail == null && activity_property_detail_container != null) {
+            this.addFragment()
+        }
+        fragmentTransaction.commit()
+    }
+
+    private fun addFragment() {
+        fragmentPropertyDetail = PropertyDetailFragment.newInstance()
+        fragmentTransaction.add(R.id.activity_property_detail_container, fragmentPropertyDetail!!)
     }
 
     override fun onListFragmentInteraction(item: DummyContent.DummyItem?) {
-
+        if (fragmentPropertyDetail == null) {
+            val intent = Intent(this, PropertyDetailActivity::class.java)
+            this.startActivity(intent)
+        }   else {
+            fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.remove(fragmentPropertyDetail!!)
+            this.addFragment()
+            fragmentTransaction.commit()
+        }
     }
 }
 
