@@ -6,6 +6,9 @@ import org.junit.Test
 import org.junit.Assert.assertEquals
 import java.text.SimpleDateFormat
 import java.util.*
+import org.mockito.Mockito
+import org.mockito.Mockito.mock
+import org.mockito.MockitoAnnotations
 
 /**
  * Example local unit test, which will execute on the development machine (host).

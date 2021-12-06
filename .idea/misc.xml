@@ -4,6 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable-v24/baseline_search_24.xml" value="0.2675925925925926" />
+        <entry key="app/src/main/res/drawable/baseline_bathtub_24.xml" value="0.14479166666666668" />
+        <entry key="app/src/main/res/drawable/baseline_home_24.xml" value="0.14479166666666668" />
+        <entry key="app/src/main/res/drawable/baseline_hotel_24.xml" value="0.14479166666666668" />
+        <entry key="app/src/main/res/drawable/baseline_place_24.xml" value="0.14479166666666668" />
+        <entry key="app/src/main/res/drawable/baseline_settings_overscan_24.xml" value="0.14479166666666668" />
         <entry key="app/src/main/res/layout-w600dp/activity_main.xml" value="0.10890652557319223" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1118659420289855" />
         <entry key="app/src/main/res/layout/activity_main_nav_header.xml" value="0.12864583333333332" />

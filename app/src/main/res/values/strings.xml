@@ -17,4 +17,46 @@
     <string name="localisation">localisation</string>
     <string name="price">price</string>
 
+    //property list
+    <string name="media">media</string>
+    <string name="description">description</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</string>
+    <string name="surface">surface</string>
+    <string name="square_meters_example">300m²</string>
+    <string name="number_of_rooms">Number of rooms</string>
+    <string name="_8">8</string>
+    <string name="number_of_bathrooms">Number of bathrooms</string>
+    <string name="_2">2</string>
+    <string name="number_of_bedrooms">Number of bedrooms</string>
+    <string name="_4">4</string>
+    <string name="agent">Agent</string>
+    <string name="location">Location</string>
+    <string name="path">path</string>
+    <string name="complement">complement</string>
+    <string name="city">city</string>
+    <string name="postal_code">postal code</string>
+    <string name="country">country</string>
+    <string name="square_meters">square meters</string>
+    <string name="rooms">rooms</string>
+    <string name="bathrooms">bathrooms</string>
+    <string name="bedrooms">bedrooms</string>
+    <string name="available">Available</string>
+    <string name="sold">Sold</string>
+    <string name="school">school</string>
+    <string name="commerces">commerces</string>
+    <string name="park">park</string>
+    <string name="subways">subways</string>
+    <string name="train">train</string>
+    <string name="location_of_interest">Location of interest</string>
+    <string name="agent_in_charge">Agent in charge</string>
+    <string name="fake_agent">fake agent</string>
+    <string name="entry_date">Entry date</string>
+    <string name="date">10/12/1994</string>
+    <string name="sale_date">Sale date</string>
+    <string name="empty_location_of_interest">-</string>
+    <string name="update_button_property_detail">Something wrong happened !</string>
+    <string name="maps_static_error">An error was encountered.</string>
+    <string name="maps_static_error_zero_results">No property found for this address.</string>
+    <string name="location_example">location example</string>
+
 </resources>
