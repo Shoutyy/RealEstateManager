@@ -5,8 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.realestatemanager.R
-import com.example.realestatemanager.database.DummyContent
+import com.example.realestatemanager.ui.property.PropertyListFragment.OnListFragmentInteractionListener
 import com.example.realestatemanager.database.DummyContent.DummyItem
+import android.widget.ImageView
+import android.widget.TextView
+import kotlinx.android.synthetic.main.fragment_property.view.*
+
 
 class PropertyListRecyclerViewAdapter(
     private val mValues: List<DummyItem>,
@@ -32,6 +36,10 @@ class PropertyListRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
+        holder.img.setImageResource(R.drawable.ic_launcher_background)
+        holder.type.text = "type"
+        holder.location.text = "location"
+        holder.price.text = "price"
 
         with(holder.mView) {
             tag = item
@@ -42,6 +50,10 @@ class PropertyListRecyclerViewAdapter(
     override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
+        val img: ImageView = mView.property_img
+        val type: TextView = mView.property_type
+        val location: TextView = mView.property_location
+        val price: TextView = mView.property_price
 
         override fun toString(): String {
             return super.toString() + " '" + "mContentView.text" + " '"
