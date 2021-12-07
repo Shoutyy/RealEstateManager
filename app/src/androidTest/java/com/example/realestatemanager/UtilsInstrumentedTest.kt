@@ -1,14 +1,13 @@
 package com.example.realestatemanager
 
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.realestatemanager.ui.MainActivity
 import com.example.realestatemanager.util.Utils
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.telephony.TelephonyManager
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
+import androidx.test.core.app.ApplicationProvider.*
 import org.junit.Before
 
 import org.junit.Test
@@ -72,4 +71,5 @@ class UtilsInstrumentedTest {
         }
         assertEquals(false, Utils.isInternetAvailable(getApplicationContext<MainActivity>()))
     }
+
 }
