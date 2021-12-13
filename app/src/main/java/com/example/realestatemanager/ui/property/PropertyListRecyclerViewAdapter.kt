@@ -9,10 +9,14 @@ import com.example.realestatemanager.ui.property.PropertyListFragment.OnListFrag
 import com.example.realestatemanager.database.DummyContent.DummyItem
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.realestatemanager.model.Address
+import com.example.realestatemanager.model.Property
 import kotlinx.android.synthetic.main.fragment_property.view.*
 
 
 class PropertyListRecyclerViewAdapter(
+    private val properties: MutableList<Property>?,
+    private val addresses: MutableList<Address>?,
     private val mValues: List<DummyItem>,
     private val mListener: PropertyListFragment.OnListFragmentInteractionListener?)
     : RecyclerView.Adapter<PropertyListRecyclerViewAdapter.ViewHolder>(){

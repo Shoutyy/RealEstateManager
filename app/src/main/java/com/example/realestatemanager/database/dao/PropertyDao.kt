@@ -8,9 +8,9 @@ import com.example.realestatemanager.model.Property
 interface PropertyDao {
 
     @Query("SELECT * FROM Property")
-    fun getPropertys(): LiveData<List<Property>>
+    fun getProperties(): LiveData<List<Property>>
 
-    @Query("SELECT * FROM Property WHERE id == id")
+    @Query("SELECT * FROM Property WHERE :id == id")
     fun getProperty(id: Int): LiveData<Property>
 
     @Insert
@@ -19,7 +19,7 @@ interface PropertyDao {
     @Update
     fun updateProperty(property: Property)
 
-    @Query("DELETE FROM Property WHERE id == id")
+    @Query("DELETE FROM Property WHERE :id == id")
     fun deleteProperty(id: Int)
 
 }

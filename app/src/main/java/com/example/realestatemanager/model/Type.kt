@@ -1,6 +1,6 @@
 package com.example.realestatemanager.model
 
-enum class Type() {
+enum class Type {
     FLAT,
     PENTHOUSE,
     MANSION,

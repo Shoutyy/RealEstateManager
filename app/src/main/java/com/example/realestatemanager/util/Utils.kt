@@ -6,6 +6,7 @@ import android.net.ConnectivityManager
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.*
+import kotlin.math.roundToLong
 
 /**
  * Created by Philippe on 21/02/2018.
@@ -31,14 +32,14 @@ object Utils {
      * @return
      */
     fun convertDollarToEuro(dollars: Int): Int {
-        return Math.round(dollars * 0.812).toInt()
+        return (dollars * 0.812).roundToLong().toInt()
     }
 
     /**
      * Convert d'un prix d'un bien immobilier (Euros vers Dollars)
      */
     fun convertEuroToDollar(euros: Int): Int {
-        return Math.round(euros * 1.232).toInt()
+        return (euros * 1.232).roundToLong().toInt()
     }
 
     /**
