@@ -5,32 +5,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.realestatemanager.R
-import com.example.realestatemanager.ui.property.PropertyListFragment.OnListFragmentInteractionListener
-import com.example.realestatemanager.database.DummyContent.DummyItem
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.realestatemanager.model.Address
-import com.example.realestatemanager.model.Property
+import com.example.realestatemanager.model.ModelsProcessedPropertyList
 import kotlinx.android.synthetic.main.fragment_property.view.*
 
 
+
 class PropertyListRecyclerViewAdapter(
-    private val properties: MutableList<Property>?,
-    private val addresses: MutableList<Address>?,
-    private val mValues: List<DummyItem>,
-    private val mListener: PropertyListFragment.OnListFragmentInteractionListener?)
+    /*private val mListener: PropertyListFragment.OnListFragmentInteractionListener?*/)
     : RecyclerView.Adapter<PropertyListRecyclerViewAdapter.ViewHolder>(){
 
-    private val mOnClickListener: View.OnClickListener
-
-    init {
-        mOnClickListener= View.OnClickListener { v ->
-            val item = v.tag as DummyItem
-            // Notify the active callbacks interface (the activity, if the fragment is attached to
-            // one) that an item has been selected.
-            mListener?.onListFragmentInteraction(item)
-        }
-    }
+    private val modelsProcessed = mutableListOf<ModelsProcessedPropertyList>()
+    private var mListener: PropertyListFragment.OnListFragmentInteractionListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -39,29 +26,31 @@ class PropertyListRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = mValues[position]
         holder.img.setImageResource(R.drawable.ic_launcher_background)
-        holder.type.text = "type"
-        holder.location.text = "location"
-        holder.price.text = "price"
+        val model: ModelsProcessedPropertyList = modelsProcessed[position]
 
-        with(holder.mView) {
-            tag = item
-            setOnClickListener(mOnClickListener)
+        with(holder) {
+            //img.setImageBitmap(property.images[0])
+            type.text = model.type
+            district.text = model.district
+            price.text = model.price
+            mView.setOnClickListener { mListener?.onListFragmentInteraction(model.propertyId) }
         }
     }
 
-    override fun getItemCount(): Int = mValues.size
+    override fun getItemCount(): Int = modelsProcessed.size
+
+    fun receiveData(modelsProcessed: List<ModelsProcessedPropertyList>, listener: PropertyListFragment.OnListFragmentInteractionListener?) {
+        this.modelsProcessed.clear()
+        this.modelsProcessed.addAll(modelsProcessed)
+        mListener = listener
+        notifyDataSetChanged()
+    }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val img: ImageView = mView.property_img
         val type: TextView = mView.property_type
-        val location: TextView = mView.property_location
+        val district: TextView = mView.property_district
         val price: TextView = mView.property_price
-
-        override fun toString(): String {
-            return super.toString() + " '" + "mContentView.text" + " '"
-        }
     }
-
 }

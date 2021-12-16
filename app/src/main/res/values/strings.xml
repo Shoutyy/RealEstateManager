@@ -30,7 +30,7 @@
     <string name="number_of_bedrooms">Number of bedrooms</string>
     <string name="_4">4</string>
     <string name="agent">Agent</string>
-    <string name="location">Location</string>
+    <string name="district">District</string>
     <string name="path">path</string>
     <string name="complement">complement</string>
     <string name="city">city</string>
