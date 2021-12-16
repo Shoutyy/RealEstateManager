@@ -10,7 +10,6 @@ import com.example.realestatemanager.database.converter.TypeConverter
 import com.example.realestatemanager.model.Type
 import com.example.realestatemanager.database.converter.StatusConverter
 import com.example.realestatemanager.model.Status
-import com.example.realestatemanager.database.converter.AgentConverter
 import com.example.realestatemanager.model.Agent
 import com.example.realestatemanager.database.converter.LocationsOfInterestConverter
 import com.example.realestatemanager.model.LocationOfInterest
@@ -81,19 +80,6 @@ class StatusConverterTest {
     @Test
     fun toStatus_IntToStatus() {
         assertEquals(Status.SOLD, StatusConverter.toStatus(1))
-    }
-}
-
-class AgentConverterTest {
-
-    @Test
-    fun fromAgent_AgentToInt() {
-        assertEquals(4, AgentConverter.fromAgent(Agent.JOSETTE_BOUTROUX))
-    }
-
-    @Test
-    fun toAgent_IntToAgent() {
-        assertEquals(Agent.HARMONIE_NEE, AgentConverter.toAgent(1))
     }
 }
 
