@@ -8,6 +8,8 @@ class PropertyDataRepository(private val propertyDao: PropertyDao) {
 
     fun getProperties(): LiveData<List<Property>> { return propertyDao.getProperties() }
 
+    fun getFirstProperty(): LiveData<Property> { return propertyDao.getFirstProperty()}
+
     fun getProperty(propertyId: Int): LiveData<Property> { return propertyDao.getProperty(propertyId) }
 
     fun insertProperty(property: Property) = propertyDao.insertProperty(property)

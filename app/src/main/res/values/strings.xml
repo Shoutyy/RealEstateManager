@@ -58,5 +58,6 @@
     <string name="maps_static_error">An error was encountered.</string>
     <string name="maps_static_error_zero_results">No property found for this address.</string>
     <string name="location_example">location example</string>
+    <string name="location">location</string>
 
 </resources>

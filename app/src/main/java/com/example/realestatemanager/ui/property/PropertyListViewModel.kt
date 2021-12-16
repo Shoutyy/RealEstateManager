@@ -2,15 +2,16 @@ package com.example.realestatemanager.ui.property
 
 import androidx.lifecycle.*
 import com.example.realestatemanager.model.*
-import com.example.realestatemanager.model.ModelsProcessedPropertyList
 import com.example.realestatemanager.repository.AddressDataRepository
 import com.example.realestatemanager.repository.PropertyDataRepository
+import com.example.realestatemanager.repository.AgentDataRepository
 import java.util.concurrent.Executor
 
 class PropertyListViewModel (
-    private val propertyDataSource: PropertyDataRepository,
-    private val addressDataSource: AddressDataRepository,
-    private val executor: Executor) : ViewModel() {
+        private val propertyDataSource: PropertyDataRepository,
+        private val addressDataSource: AddressDataRepository,
+        private val agentDataSource: AgentDataRepository,
+        private val executor: Executor) : ViewModel() {
 
     private var _properties: LiveData<List<ModelsProcessedPropertyList>> = Transformations.map(propertyDataSource.getProperties()) { it.map { property -> buildUiModel(property) } }
     val properties: LiveData<List<ModelsProcessedPropertyList>> = _properties

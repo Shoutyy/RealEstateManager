@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import com.example.realestatemanager.database.dao.AgentDao
 import com.example.realestatemanager.model.Agent
 
-class AgentDateRepository(private val agentDao: AgentDao) {
+class AgentDataRepository(private val agentDao: AgentDao) {
 
     fun getAgents(): LiveData<List<Agent>> { return agentDao.getAgents() }
 

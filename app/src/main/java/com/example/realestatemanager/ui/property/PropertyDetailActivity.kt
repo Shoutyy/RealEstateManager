@@ -9,7 +9,7 @@ import com.example.realestatemanager.ui.INTENT_PROPERTY_ID
 
 class PropertyDetailActivity : AppCompatActivity() {
 
-    private var propertyId: Int? = null
+    private var propertyId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
