@@ -1,19 +1,11 @@
 package com.example.realestatemanager
 
-import com.example.realestatemanager.database.converter.DistrictConverter
+import com.example.realestatemanager.database.converter.*
 import com.example.realestatemanager.model.District
-import com.example.realestatemanager.database.converter.CityConverter
 import com.example.realestatemanager.model.City
-import com.example.realestatemanager.database.converter.CountryConverter
 import com.example.realestatemanager.model.Country
-import com.example.realestatemanager.database.converter.TypeConverter
 import com.example.realestatemanager.model.Type
-import com.example.realestatemanager.database.converter.StatusConverter
-import com.example.realestatemanager.model.Status
-import com.example.realestatemanager.model.Agent
-import com.example.realestatemanager.database.converter.LocationsOfInterestConverter
 import com.example.realestatemanager.model.LocationOfInterest
-import com.example.realestatemanager.database.converter.DateConverter
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.sql.Date
@@ -70,33 +62,20 @@ class TypeConverterTest {
     }
 }
 
-class StatusConverterTest {
-
-    @Test
-    fun fromStatus_StatusToInt() {
-        assertEquals(1 , StatusConverter.fromStatus(Status.SOLD))
-    }
-
-    @Test
-    fun toStatus_IntToStatus() {
-        assertEquals(Status.SOLD, StatusConverter.toStatus(1))
-    }
-}
 
 class LocationsOfInterestConverterTest  {
 
     @Test
     fun fromLocationsOfInterest_LocationsOfInterestToString() {
-        assertEquals("SCHOOL, PARK",
-            LocationsOfInterestConverter
-                .fromLocationsOfInterest(listOf(LocationOfInterest.SCHOOL,
-                    LocationOfInterest.PARK)))
+        assertEquals(2,
+            LocationOfInterestConverter
+                .fromLocationOfInterest(LocationOfInterest.PARK))
     }
 
     @Test
     fun toLocationsOfInterest_StringToLocationsOfInterest() {
-        assertEquals(listOf(LocationOfInterest.SCHOOL, LocationOfInterest.PARK),
-            LocationsOfInterestConverter.toLocationsOfInterest("0,2"))
+        assertEquals(LocationOfInterest.COMMERCES,
+            LocationOfInterestConverter.toLocationOfInterest(1))
     }
 
 }

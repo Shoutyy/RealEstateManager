@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInt
     private var fragmentPropertyDetail: PropertyDetailFragment? = null
     private var fragmentEmptyPropertyDetail: EmptyPropertyDetailFragment? = null
     private var containerPropertyDetail: Fragment? = null
+    private var propertyId: Int = 0
 
     private fun initAndAddFragment() {
         fragmentPropertyList = PropertyListFragment.newInstance()
@@ -90,11 +91,12 @@ class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInt
     }
 
     override fun onListFragmentInteraction(propertyId: Int) {
+        this.propertyId = propertyId
         if (fragmentPropertyDetail == null && fragmentEmptyPropertyDetail == null) {
             val intent = Intent(this, PropertyDetailActivity::class.java)
             intent.putExtra(INTENT_PROPERTY_ID, propertyId)
             startActivity(intent)
-        }   else if (fragmentEmptyPropertyDetail == null && fragmentEmptyPropertyDetail != null) {
+        }   else if (fragmentPropertyDetail == null && fragmentEmptyPropertyDetail != null) {
             addFragment(propertyId, fragmentEmptyPropertyDetail!!)
         }   else {
             addFragment(propertyId, fragmentPropertyDetail!!)

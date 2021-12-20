@@ -1,6 +1,8 @@
 package com.example.realestatemanager.di
 
 import android.content.Context
+import com.example.realestatemanager.model.PropertyAndLocationOfInterest
+import com.example.realestatemanager.repository.PropertyAndLocationOfInterestDataRepository
 import com.example.realestatemanager.database.AppDatabase
 import com.example.realestatemanager.repository.AddressDataRepository
 import com.example.realestatemanager.repository.AgentDataRepository
@@ -27,6 +29,11 @@ class DetailInjection {
             return AgentDataRepository(database.agentDao())
         }
 
+        private fun providePropertyAndLocationOfInterestDataSource(context: Context): PropertyAndLocationOfInterestDataRepository {
+            val database = AppDatabase.getInstance(context)
+            return PropertyAndLocationOfInterestDataRepository(database.propertyAndLocationOfInterestDao())
+        }
+
         private fun provideExecutor() : Executor {
             return Executors.newSingleThreadExecutor()
         }
@@ -35,8 +42,9 @@ class DetailInjection {
             val dataSourceProperty = providePropertyDataSource(context)
             val dataSourceAddress = provideAddressDataSource(context)
             val dataSourceAgent = provideAgentDataSource(context)
+            val dateSourcePropertyAndLocationOfInterest = providePropertyAndLocationOfInterestDataSource(context)
             val executor = provideExecutor()
-            return DetailViewModelFactory(dataSourceProperty, dataSourceAddress, dataSourceAgent, executor)
+            return DetailViewModelFactory(dataSourceProperty, dataSourceAddress, dataSourceAgent, dateSourcePropertyAndLocationOfInterest, executor)
         }
 
     }

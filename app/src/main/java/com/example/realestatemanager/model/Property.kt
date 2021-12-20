@@ -22,9 +22,8 @@ class Property(
     //val images: MutableList<Bitmap>,
     val addressId: Int,
     @Embedded val address: Address?,
-    val locationsOfInterest: MutableList<LocationOfInterest>,
-    val status: Status,
-    val availableSince: Long,
+    val available: Boolean,
+    val entryDate: Long,
     val saleDate: Long?,
     val agentId: Int,
     @Embedded val agent: Agent?
