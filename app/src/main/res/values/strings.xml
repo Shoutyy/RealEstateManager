@@ -4,20 +4,34 @@
 
     //toolbar menu
     <string name="search">Search</string>
-    <string name="create">Create</string>
+    <string name="update">Update</string>
     <string name="add">Add</string>
 
     //drawer menu
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="temp">temp</string>
+    <string name="square_meters">square meters</string>
+    <string name="rooms">rooms</string>
+    <string name="bathrooms">bathrooms</string>
+    <string name="bedrooms">bedrooms</string>
+    <string name="name">name</string>
+    <string name="first_name">first name</string>
+    <string name="available">available</string>
+    <string name="school">school</string>
+    <string name="commerces">commerces</string>
+    <string name="park">park</string>
+    <string name="subways">subways</string>
+    <string name="train">train</string>
+    <string name="location_of_interest">location of interest</string>
+    <string name="agent_in_charge">Agent in charge of this property</string>
 
     //property list
     <string name="type">type</string>
     <string name="localisation">localisation</string>
     <string name="price">price</string>
 
-    //property list
+    //property detail
     <string name="media">media</string>
     <string name="description">description</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</string>
@@ -36,19 +50,7 @@
     <string name="city">city</string>
     <string name="postal_code">postal code</string>
     <string name="country">country</string>
-    <string name="square_meters">square meters</string>
-    <string name="rooms">rooms</string>
-    <string name="bathrooms">bathrooms</string>
-    <string name="bedrooms">bedrooms</string>
-    <string name="available">Available</string>
     <string name="sold">Sold</string>
-    <string name="school">school</string>
-    <string name="commerces">commerces</string>
-    <string name="park">park</string>
-    <string name="subways">subways</string>
-    <string name="train">train</string>
-    <string name="location_of_interest">Location of interest</string>
-    <string name="agent_in_charge">Agent in charge</string>
     <string name="fake_agent">fake agent</string>
     <string name="entry_date">Entry date</string>
     <string name="date">10/12/1994</string>
@@ -59,5 +61,36 @@
     <string name="maps_static_error_zero_results">No property found for this address.</string>
     <string name="location_example">location example</string>
     <string name="location">location</string>
+
+    //form
+    <string-array name="form_district">
+        <item>Bronx</item>
+        <item>Brooklyn</item>
+        <item>Manhattan</item>
+        <item>Queens</item>
+        <item>Staten Island</item>
+    </string-array>
+
+    <string-array name="form_city">
+        <item>New York</item>
+    </string-array>
+
+    <string-array name="form_country">
+        <item>United States</item>
+    </string-array>
+
+    <string-array name="form_type">
+        <item>Flat</item>
+        <item>Penthouse</item>
+        <item>Mansion</item>
+        <item>Duplex</item>
+        <item>House</item>
+        <item>Loft</item>
+        <item>Townhouse</item>
+        <item>Condo</item>
+    </string-array>
+
+    //empty property detail
+    <string name="select_property_for_detail">Select a property to see his detail.</string>
 
 </resources>

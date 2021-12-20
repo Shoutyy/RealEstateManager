@@ -13,20 +13,17 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.realestatemanager.di.DetailInjection
 import com.example.realestatemanager.model.ModelsProcessedPropertyDetail
 
+private const val ARG_PROPERTY_ID = "ARG_PROPERTY_ID"
+
 class PropertyDetailFragment : Fragment() {
 
     companion object {
-        private const val ARG_PROPERTY_ID = "ARG_PROPERTY_ID"
-
-        fun newInstance(propertyId: Int?): PropertyDetailFragment {
-            val fragment = PropertyDetailFragment()
-           propertyId?.let {
-               val args = Bundle()
-               args.putInt(ARG_PROPERTY_ID, propertyId)
-               fragment.arguments = args
-           }
-            return fragment
-        }
+        fun newInstance(propertyId: Int) =
+            PropertyDetailFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(ARG_PROPERTY_ID, propertyId)
+                }
+            }
     }
 
     private var propertyId: Int = 0
@@ -53,16 +50,8 @@ class PropertyDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (propertyId == 0) {
-            getFirstProperty()
-        } else {
-            getProperty()
-        }
+        propertyDetailViewModel.getProperty(propertyId).observe(viewLifecycleOwner, Observer { updateUi(it) })
     }
-
-    private fun getProperty() = propertyDetailViewModel.getProperty(propertyId).observe(viewLifecycleOwner, Observer { updateUi(it) })
-
-    private fun getFirstProperty() = propertyDetailViewModel.getFirstProperty().observe(viewLifecycleOwner, Observer { updateUi(it) })
 
     private fun updateUi(model: ModelsProcessedPropertyDetail) {
         with(model) {

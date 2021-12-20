@@ -15,9 +15,9 @@ class PropertyDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_property_detail)
 
-        this.retrieveIntent()
-        this.configureToolbar()
-        this.initAndAddFragment()
+        retrieveIntent()
+        configureToolbar()
+        initAndAddFragment()
     }
 
     private fun retrieveIntent() {
