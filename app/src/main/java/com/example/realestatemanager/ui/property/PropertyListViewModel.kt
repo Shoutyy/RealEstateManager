@@ -6,6 +6,7 @@ import com.example.realestatemanager.repository.AddressDataRepository
 import com.example.realestatemanager.repository.PropertyDataRepository
 import com.example.realestatemanager.repository.AgentDataRepository
 import java.util.concurrent.Executor
+import java.text.NumberFormat
 
 class PropertyListViewModel (
         private val propertyDataSource: PropertyDataRepository,
@@ -21,7 +22,7 @@ class PropertyListViewModel (
             propertyId = property.id,
             type = getTypeIntoStringForUi(property.type),
             district = getDistrictIntoStringForUi(property.address?.district),
-            price = property.price
+            price = getPriceIntoStringForUi(property.price)
         )
 
     private fun getTypeIntoStringForUi(type: Type): String {
@@ -48,22 +49,8 @@ class PropertyListViewModel (
         }
     }
 
-    //address
-    fun getAddress(addressId: Int): LiveData<Address> { return addressDataSource.getAddress(addressId) }
-
-    fun insertAddress(address: Address) = executor.execute { addressDataSource.insertAddress(address) }
-
-    fun updateAddress(address: Address) = executor.execute { addressDataSource.updateAddress(address) }
-
-    fun deleteAddresses(addressId: Int) = executor.execute { addressDataSource.deleteAddress(addressId) }
-
-    //property
-    fun getProperty(propertyId: Int): LiveData<Property> { return propertyDataSource.getProperty(propertyId) }
-
-    fun insertProperty(property: Property) = executor.execute { propertyDataSource.insertProperty(property) }
-
-    fun updateProperty(property: Property) = executor.execute { propertyDataSource.updateProperty(property) }
-
-    fun deleteProperty(propertyId: Int) = executor.execute { propertyDataSource.deleteProperty(propertyId) }
+    private fun getPriceIntoStringForUi(price: Long): String {
+        return "$" + NumberFormat.getIntegerInstance().format(price)
+    }
 
 }

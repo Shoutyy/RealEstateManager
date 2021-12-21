@@ -11,9 +11,8 @@ import androidx.room.PrimaryKey
     parentColumns = ["agent_id"], childColumns = ["agentId"])])
 
 class Property(
-    @PrimaryKey(autoGenerate = true) val id: Int,
     val type: Type,
-    val price: String,
+    val price: Long,
     val surface: Int,
     val rooms: Int,
     val bedrooms: Int,
@@ -21,11 +20,13 @@ class Property(
     val description: String,
     //val images: MutableList<Bitmap>,
     val addressId: Int,
-    @Embedded val address: Address?,
     val available: Boolean,
     val entryDate: Long,
     val saleDate: Long?,
-    val agentId: Int,
-    @Embedded val agent: Agent?
-)
+    val agentId: Int
+) {
+    @PrimaryKey(autoGenerate = true) var id: Int = 0
+    @Embedded var address: Address? = null
+    @Embedded var agent: Agent? = null
+}
 

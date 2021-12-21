@@ -5,8 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.opengl.Visibility
-import androidx.lifecycle.ViewModelProvider
 import com.example.realestatemanager.R
 import kotlinx.android.synthetic.main.property_detail_fragment.*
 import androidx.lifecycle.Observer

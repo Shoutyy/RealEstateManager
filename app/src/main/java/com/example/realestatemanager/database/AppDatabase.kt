@@ -13,7 +13,7 @@ import com.example.realestatemanager.database.converter.TypeConverter
 import com.example.realestatemanager.model.*
 import java.util.*
 
-@Database(entities = [Property::class, Address::class, Agent::class, PropertyAndLocationOfInterest::class] , version = 4, exportSchema = false)
+@Database(entities = [Property::class, Address::class, Agent::class, PropertyAndLocationOfInterest::class] , version = 5, exportSchema = false)
 @TypeConverters(
     CityConverter::class,
     CountryConverter::class,
@@ -135,7 +135,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         private fun buildFakeProperty(type: Int,
-                                      price: String,
+                                      price: Long,
                                       surface: Int,
                                       rooms: Int,
                                       bedrooms: Int,
@@ -177,7 +177,7 @@ abstract class AppDatabase : RoomDatabase() {
             )
             buildFakeProperty(
                 type = TypeConverter.fromType(Type.HOUSE),
-                price = "$895,000",
+                price = 895000,
                 surface = 2000,
                 rooms = 8,
                 bedrooms = 2,
@@ -200,7 +200,7 @@ abstract class AppDatabase : RoomDatabase() {
             )
             buildFakeProperty(
                 type = TypeConverter.fromType(Type.TOWNHOUSE),
-                price = "$1,500,000",
+                price = 150000,
                 surface = 1325,
                 rooms = 10,
                 bedrooms = 3,
@@ -223,7 +223,7 @@ abstract class AppDatabase : RoomDatabase() {
             )
             buildFakeProperty(
                 type = TypeConverter.fromType(Type.CONDO),
-                price = "$29,900,000",
+                price = 456000,
                 surface = 4019,
                 rooms = 7,
                 bedrooms = 3,
@@ -246,7 +246,7 @@ abstract class AppDatabase : RoomDatabase() {
             )
             buildFakeProperty(
                 type = TypeConverter.fromType(Type.PENTHOUSE),
-                price = "$35,000,000",
+                price = 3500000,
                 surface = 5955,
                 rooms = 11,
                 bedrooms = 5,
@@ -268,7 +268,7 @@ abstract class AppDatabase : RoomDatabase() {
             )
             buildFakeProperty(
                 type = TypeConverter.fromType(Type.PENTHOUSE),
-                price = "$35,000,000",
+                price = 358000,
                 surface = 6240,
                 rooms = 9,
                 bedrooms = 4,
@@ -290,7 +290,7 @@ abstract class AppDatabase : RoomDatabase() {
             )
             buildFakeProperty(
                 type = TypeConverter.fromType(Type.TOWNHOUSE),
-                price = "$1,675,000",
+                price = 1890000,
                 surface = 1765,
                 rooms = 7,
                 bedrooms = 4,
@@ -312,7 +312,7 @@ abstract class AppDatabase : RoomDatabase() {
             )
             buildFakeProperty(
                 type = TypeConverter.fromType(Type.HOUSE),
-                price = "$4,499,000",
+                price = 956000,
                 surface = 12200,
                 rooms = 15,
                 bedrooms = 6,
@@ -335,7 +335,7 @@ abstract class AppDatabase : RoomDatabase() {
             )
             buildFakeProperty(
                 type = TypeConverter.fromType(Type.TOWNHOUSE),
-                price = "$6,950,000",
+                price = 890000,
                 surface = 4500,
                 rooms = 7,
                 bedrooms = 5,
@@ -357,7 +357,7 @@ abstract class AppDatabase : RoomDatabase() {
             )
             buildFakeProperty(
                 type = TypeConverter.fromType(Type.PENTHOUSE),
-                price = "$26,000,000",
+                price = 360000,
                 surface = 7693,
                 rooms = 8,
                 bedrooms = 4,
@@ -379,7 +379,7 @@ abstract class AppDatabase : RoomDatabase() {
             )
             buildFakeProperty(
                 type = TypeConverter.fromType(Type.TOWNHOUSE),
-                price = "$17,900,000",
+                price = 370000,
                 surface = 2016,
                 rooms = 8,
                 bedrooms = 8,

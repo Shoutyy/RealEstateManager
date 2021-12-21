@@ -24,7 +24,7 @@
     <string name="subways">subways</string>
     <string name="train">train</string>
     <string name="location_of_interest">location of interest</string>
-    <string name="agent_in_charge">Agent in charge of this property</string>
+    <string name="agent_in_charge">Agent in charge</string>
 
     //property list
     <string name="type">type</string>
@@ -92,5 +92,12 @@
 
     //empty property detail
     <string name="select_property_for_detail">Select a property to see his detail.</string>
+
+    <string name="details">Property details</string>
+    <string name="is_available">Is available ?</string>
+    <string name="add_form_button">ADD</string>
+    <string name="cancel_form_button">CANCEL</string>
+    <string name="entry_date_form">Date of entry into the market</string>
+    <string name="select_a_date">Select a date</string>
 
 </resources>

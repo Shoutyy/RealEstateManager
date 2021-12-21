@@ -12,9 +12,7 @@ import kotlinx.android.synthetic.main.fragment_property.view.*
 
 
 
-class PropertyListRecyclerViewAdapter(
-    /*private val mListener: PropertyListFragment.OnListFragmentInteractionListener?*/)
-    : RecyclerView.Adapter<PropertyListRecyclerViewAdapter.ViewHolder>(){
+class PropertyListRecyclerViewAdapter : RecyclerView.Adapter<PropertyListRecyclerViewAdapter.ViewHolder>() {
 
     private val modelsProcessed = mutableListOf<ModelsProcessedPropertyList>()
     private var mListener: PropertyListFragment.OnListFragmentInteractionListener? = null
