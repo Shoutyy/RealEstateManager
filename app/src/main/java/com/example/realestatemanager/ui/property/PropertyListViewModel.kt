@@ -5,6 +5,7 @@ import com.example.realestatemanager.model.*
 import com.example.realestatemanager.repository.AddressDataRepository
 import com.example.realestatemanager.repository.PropertyDataRepository
 import com.example.realestatemanager.repository.AgentDataRepository
+import com.example.realestatemanager.repository.PropertyPhotoDataRepository
 import java.util.concurrent.Executor
 import java.text.NumberFormat
 
@@ -12,6 +13,7 @@ class PropertyListViewModel (
         private val propertyDataSource: PropertyDataRepository,
         private val addressDataSource: AddressDataRepository,
         private val agentDataSource: AgentDataRepository,
+        private val propertyPhotoDataSource: PropertyPhotoDataRepository,
         private val executor: Executor) : ViewModel() {
 
     private var _properties: LiveData<List<ModelsProcessedPropertyList>> = Transformations.map(propertyDataSource.getProperties()) { it.map { property -> buildUiModel(property) } }

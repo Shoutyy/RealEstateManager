@@ -1,10 +1,7 @@
 package com.example.realestatemanager.database
 
 import android.content.Context
-import com.example.realestatemanager.database.dao.AddressDao
-import com.example.realestatemanager.database.dao.PropertyDao
-import com.example.realestatemanager.database.dao.AgentDao
-import com.example.realestatemanager.database.dao.PropertyAndLocationOfInterestDao
+import com.example.realestatemanager.database.dao.*
 import android.content.ContentValues
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -13,20 +10,27 @@ import com.example.realestatemanager.database.converter.TypeConverter
 import com.example.realestatemanager.model.*
 import java.util.*
 
-@Database(entities = [Property::class, Address::class, Agent::class, PropertyAndLocationOfInterest::class] , version = 5, exportSchema = false)
+@Database(entities = [Property::class,
+    Address::class,
+    Agent::class,
+    PropertyAndLocationOfInterest::class,
+    PropertyPhoto::class,
+    PropertyAndPropertyPhoto::class] , version = 6, exportSchema = false)
 @TypeConverters(
     CityConverter::class,
     CountryConverter::class,
     DateConverter::class,
     DistrictConverter::class,
     LocationOfInterestConverter::class,
-    TypeConverter::class)
+    TypeConverter::class,
+    WordingConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun propertyDao(): PropertyDao
     abstract fun addressDao(): AddressDao
     abstract fun agentDao(): AgentDao
     abstract fun propertyAndLocationOfInterestDao(): PropertyAndLocationOfInterestDao
+    abstract fun propertyPhotoDao(): PropertyPhotoDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
@@ -34,12 +38,11 @@ abstract class AppDatabase : RoomDatabase() {
         private val contentValuesProperty = ContentValues()
         private val contentValuesAgent = ContentValues()
         private val contentValuesPropertyAndLocationOfInterest = ContentValues()
+        private val contentValuesPropertyPhoto = ContentValues()
+        private val contentValuesPropertyAndPropertyPhoto = ContentValues()
 
         private const val NAME = "name"
         private const val FIRSTNAME = "firstName"
-
-        private const val PROPERTY_ID = "propertyId"
-        private const val LOCATION_OF_INTEREST_ID = "locationOfInterestId"
 
         private const val PATH = "path"
         private const val COMPLEMENT = "complement"
@@ -54,11 +57,21 @@ abstract class AppDatabase : RoomDatabase() {
         private const val BEDROOMS = "bedrooms"
         private const val BATHROOMS = "bathrooms"
         private const val DESCRIPTION = "description"
-        private const val ADDRESSID = "addressId"
+        private const val ADDRESS_ID = "addressId"
         private const val AVAILABLE = "available"
         private const val ENTRY_DATE = "entryDate"
         private const val SALE_DATE = "saleDate"
-        private const val AGENTID = "agentId"
+        private const val AGENT_ID = "agentId"
+
+        private const val PROPERTY_ID = "propertyId"
+        private const val LOCATION_OF_INTEREST_ID = "locationOfInterestId"
+
+        private const val WORDING = "wording"
+        private const val IS_THIS_THE_ILLUSTRATION = "isThisTheIllustration"
+
+        private const val PROPERTY_PHOTO_ID = "propertyPhotoId"
+
+        private var propertyPhotoId = 0
 
         fun getInstance(context: Context): AppDatabase {
             INSTANCE.let {}
@@ -81,7 +94,7 @@ abstract class AppDatabase : RoomDatabase() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
 
-                    addAgentIntoDatabase(db)
+                    addEveryAgentsIntoDatabase(db)
 
                     firstProperty(db)
                     secondProperty(db)
@@ -91,15 +104,46 @@ abstract class AppDatabase : RoomDatabase() {
                     sixthProperty(db)
                     seventhProperty(db)
                     eighthProperty(db)
-                    ninethProperty(db)
+                    ninthProperty(db)
                     tenthProperty(db)
 
-                    addPropertyAndLocationOfInterestIntoDatabase(db)
+                    addFirstPropertyAndLocationOfInterestIntoDatabase(1, db)
+                    addSecondPropertyAndLocationOfInterestIntoDatabase(2, db)
+                    addThirdPropertyAndLocationOfInterestIntoDatabase(3, db)
+                    addFourthPropertyAndLocationOfInterestIntoDatabase(4, db)
+                    addFifthPropertyAndLocationOfInterestIntoDatabase(5, db)
+                    addSixthPropertyAndLocationOfInterestIntoDatabase(6, db)
+                    addSeventhPropertyAndLocationOfInterestIntoDatabase(7, db)
+                    addEighthPropertyAndLocationOfInterestIntoDatabase(8, db)
+                    addNinthPropertyAndLocationOfInterestIntoDatabase(9, db)
+                    addTenthPropertyAndLocationOfInterestIntoDatabase(10, db)
+
+                    addFirstPropertyPhotoIntoDatabase(db)
+                    addSecondPropertyPhotoIntoDatabase(db)
+                    addThirdPropertyPhotoIntoDatabase(db)
+                    addFourthPropertyPhotoIntoDatabase(db)
+                    addFifthPropertyPhotoIntoDatabase(db)
+                    addSixthPropertyPhotoIntoDatabase(db)
+                    addSeventhPropertyPhotoIntoDatabase(db)
+                    addEighthPropertyPhotoIntoDatabase(db)
+                    addNinthPropertyPhotoIntoDatabase(db)
+                    addTenthPropertyPhotoIntoDatabase(db)
+
+                    addFirstPropertyAndPropertyPhotoIntoDatabase(1, db)
+                    addSecondPropertyAndPropertyPhotoIntoDatabase(2, db)
+                    addThirdPropertyAndPropertyPhotoIntoDatabase(3, db)
+                    addFourthPropertyAndPropertyPhotoIntoDatabase(4, db)
+                    addFifthPropertyAndPropertyPhotoIntoDatabase(5, db)
+                    addSixthPropertyAndPropertyPhotoIntoDatabase(6, db)
+                    addSeventhPropertyAndPropertyPhotoIntoDatabase(7, db)
+                    addEighthPropertyAndPropertyPhotoIntoDatabase(8, db)
+                    addNinthPropertyAndPropertyPhotoIntoDatabase(9, db)
+                    addTenthPropertyAndPropertyPhotoIntoDatabase(10, db)
                 }
             }
         }
 
-        private fun addAgentIntoDatabase(db: SupportSQLiteDatabase) {
+        private fun addEveryAgentsIntoDatabase(db: SupportSQLiteDatabase) {
             buildAgentAndInsert("Nee", "Harmonie", db)
             buildAgentAndInsert("Lafaille", "Clelie", db)
             buildAgentAndInsert("Beauvau", "Elisa", db)
@@ -153,15 +197,14 @@ abstract class AppDatabase : RoomDatabase() {
             contentValuesProperty.put(BEDROOMS, bedrooms)
             contentValuesProperty.put(BATHROOMS, bathrooms)
             contentValuesProperty.put(DESCRIPTION, description)
-            //contentValuesProperty.put("images", )
-            contentValuesProperty.put(ADDRESSID, addressId)
+            contentValuesProperty.put(ADDRESS_ID, addressId)
             contentValuesProperty.put(AVAILABLE, available)
             contentValuesProperty.put(ENTRY_DATE, entryDate)
             if (saleDate == null) {
             } else {
                 contentValuesProperty.put(SALE_DATE, saleDate)
             }
-            contentValuesProperty.put(AGENTID, agentId)
+            contentValuesProperty.put(AGENT_ID, agentId)
         }
 
         private fun insertValue(db: SupportSQLiteDatabase) {
@@ -349,7 +392,7 @@ abstract class AppDatabase : RoomDatabase() {
             insertValue(db)
         }
 
-        private fun ninethProperty(db: SupportSQLiteDatabase) {
+        private fun ninthProperty(db: SupportSQLiteDatabase) {
             buildFakeAddress(
                 path = "66 E 11th St",
                 district = DistrictConverter.fromDistrict(District.MANHATTAN),
@@ -393,43 +436,503 @@ abstract class AppDatabase : RoomDatabase() {
             insertValue(db)
         }
 
-        private fun addPropertyAndLocationOfInterestIntoDatabase(db: SupportSQLiteDatabase) {
-            buildPropertyAndLocationOfInterestAndInsert(1,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
-            buildPropertyAndLocationOfInterestAndInsert(1,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.PARK),db)
-            buildPropertyAndLocationOfInterestAndInsert(2,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
-            buildPropertyAndLocationOfInterestAndInsert(2,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.COMMERCES),db)
-            buildPropertyAndLocationOfInterestAndInsert(2,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.PARK),db)
-            buildPropertyAndLocationOfInterestAndInsert(2,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SUBWAYS),db)
-            buildPropertyAndLocationOfInterestAndInsert(3,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
-            buildPropertyAndLocationOfInterestAndInsert(3,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.COMMERCES),db)
-            buildPropertyAndLocationOfInterestAndInsert(3,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.PARK),db)
-            buildPropertyAndLocationOfInterestAndInsert(3,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SUBWAYS),db)
-            buildPropertyAndLocationOfInterestAndInsert(4,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
-            buildPropertyAndLocationOfInterestAndInsert(4,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.COMMERCES),db)
-            buildPropertyAndLocationOfInterestAndInsert(4,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.PARK),db)
-            buildPropertyAndLocationOfInterestAndInsert(5,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
-            buildPropertyAndLocationOfInterestAndInsert(5,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.COMMERCES),db)
-            buildPropertyAndLocationOfInterestAndInsert(5,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.PARK),db)
-            buildPropertyAndLocationOfInterestAndInsert(5,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.TRAIN),db)
-            buildPropertyAndLocationOfInterestAndInsert(6,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
-            buildPropertyAndLocationOfInterestAndInsert(6,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.COMMERCES),db)
-            buildPropertyAndLocationOfInterestAndInsert(6,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.PARK),db)
-            buildPropertyAndLocationOfInterestAndInsert(7,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
-            buildPropertyAndLocationOfInterestAndInsert(8,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
-            buildPropertyAndLocationOfInterestAndInsert(8,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.COMMERCES),db)
-            buildPropertyAndLocationOfInterestAndInsert(8,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SUBWAYS),db)
-            buildPropertyAndLocationOfInterestAndInsert(9,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
-            buildPropertyAndLocationOfInterestAndInsert(9,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.COMMERCES),db)
-            buildPropertyAndLocationOfInterestAndInsert(9,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SUBWAYS),db)
-            buildPropertyAndLocationOfInterestAndInsert(10,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
-            buildPropertyAndLocationOfInterestAndInsert(10,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.COMMERCES),db)
-            buildPropertyAndLocationOfInterestAndInsert(10,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SUBWAYS),db)
+        private fun addFirstPropertyAndLocationOfInterestIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.PARK),db)
+        }
+
+        private fun addSecondPropertyAndLocationOfInterestIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.COMMERCES),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.PARK),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SUBWAYS),db)
+        }
+
+        private fun addThirdPropertyAndLocationOfInterestIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.COMMERCES),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.PARK),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SUBWAYS),db)
+        }
+
+        private fun addFourthPropertyAndLocationOfInterestIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.COMMERCES),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.PARK),db)
+        }
+
+        private fun addFifthPropertyAndLocationOfInterestIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.COMMERCES),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.PARK),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.TRAIN),db)
+        }
+
+        private fun addSixthPropertyAndLocationOfInterestIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.COMMERCES),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.PARK),db)
+        }
+
+        private fun addSeventhPropertyAndLocationOfInterestIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
+        }
+
+        private fun addEighthPropertyAndLocationOfInterestIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.COMMERCES),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SUBWAYS),db)
+        }
+
+        private fun addNinthPropertyAndLocationOfInterestIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.COMMERCES),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SUBWAYS),db)
+        }
+
+        private fun addTenthPropertyAndLocationOfInterestIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SCHOOL),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.COMMERCES),db)
+            buildPropertyAndLocationOfInterestAndInsert(propertyId,LocationOfInterestConverter.fromLocationOfInterest(LocationOfInterest.SUBWAYS),db)
         }
 
         private fun buildPropertyAndLocationOfInterestAndInsert(propertyId: Int, locationOfInterestId: Int, db: SupportSQLiteDatabase) {
             contentValuesPropertyAndLocationOfInterest.put(PROPERTY_ID, propertyId)
             contentValuesPropertyAndLocationOfInterest.put(LOCATION_OF_INTEREST_ID, locationOfInterestId)
             db.insert("PropertyAndLocationOfInterest", OnConflictStrategy.IGNORE, contentValuesPropertyAndLocationOfInterest)
+        }
+
+        private fun addFirstPropertyPhotoIntoDatabase(db: SupportSQLiteDatabase) {
+            buildPropertyPhotoAndInsert("0", WordingConverter.fromWording(Wording.STREET_VIEW), true, db)
+            buildPropertyPhotoAndInsert("1", WordingConverter.fromWording(Wording.STREET_VIEW), false, db)
+            buildPropertyPhotoAndInsert("2", WordingConverter.fromWording(Wording.STREET_VIEW), false, db)
+            buildPropertyPhotoAndInsert("3", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("4", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("5", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("6", WordingConverter.fromWording(Wording.HALL), false, db)
+            buildPropertyPhotoAndInsert("7", WordingConverter.fromWording(Wording.KITCHEN), false, db)
+            buildPropertyPhotoAndInsert("8", WordingConverter.fromWording(Wording.DINING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("9", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("10", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("11", WordingConverter.fromWording(Wording.BALCONY), false, db)
+            buildPropertyPhotoAndInsert("12", WordingConverter.fromWording(Wording.BALCONY), false, db)
+            buildPropertyPhotoAndInsert("13", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("14", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("15", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("16", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("17", WordingConverter.fromWording(Wording.BALCONY), false, db)
+            buildPropertyPhotoAndInsert("18", WordingConverter.fromWording(Wording.TERRACE), false, db)
+            buildPropertyPhotoAndInsert("19", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("20", WordingConverter.fromWording(Wording.WALK_IN_CLOSET), false, db)
+            buildPropertyPhotoAndInsert("21", WordingConverter.fromWording(Wording.OFFICE), false, db)
+            buildPropertyPhotoAndInsert("22", WordingConverter.fromWording(Wording.TERRACE), false, db)
+            buildPropertyPhotoAndInsert("23", WordingConverter.fromWording(Wording.TERRACE), false, db)
+            buildPropertyPhotoAndInsert("24", WordingConverter.fromWording(Wording.TERRACE), false, db)
+        }
+
+        private fun addSecondPropertyPhotoIntoDatabase(db: SupportSQLiteDatabase) {
+            buildPropertyPhotoAndInsert("0", WordingConverter.fromWording(Wording.LIVING_ROOM), true, db)
+            buildPropertyPhotoAndInsert("1", WordingConverter.fromWording(Wording.KITCHEN), false, db)
+            buildPropertyPhotoAndInsert("2", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("3", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("4", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("5", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("6", WordingConverter.fromWording(Wording.ROOF_TOP), false, db)
+            buildPropertyPhotoAndInsert("7", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("8", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("9", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("10", WordingConverter.fromWording(Wording.PLAN), false, db)
+        }
+
+        private fun addThirdPropertyPhotoIntoDatabase(db: SupportSQLiteDatabase) {
+            buildPropertyPhotoAndInsert("0", WordingConverter.fromWording(Wording.LIVING_ROOM), true, db)
+            buildPropertyPhotoAndInsert("1", WordingConverter.fromWording(Wording.HALLWAY), false, db)
+            buildPropertyPhotoAndInsert("2", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("3", WordingConverter.fromWording(Wording.KITCHEN), false, db)
+            buildPropertyPhotoAndInsert("4", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("5", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("6", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("7", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("8", WordingConverter.fromWording(Wording.VIEW), false, db)
+            buildPropertyPhotoAndInsert("9", WordingConverter.fromWording(Wording.VIEW), false, db)
+            buildPropertyPhotoAndInsert("10", WordingConverter.fromWording(Wording.GARAGE), false, db)
+            buildPropertyPhotoAndInsert("11", WordingConverter.fromWording(Wording.SWIMMING_POOL), false, db)
+            buildPropertyPhotoAndInsert("12", WordingConverter.fromWording(Wording.FITNESS_CENTRE), false, db)
+            buildPropertyPhotoAndInsert("13", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("14", WordingConverter.fromWording(Wording.SPA), false, db)
+            buildPropertyPhotoAndInsert("15", WordingConverter.fromWording(Wording.CINEMA), false, db)
+            buildPropertyPhotoAndInsert("16", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("17", WordingConverter.fromWording(Wording.CONFERENCE), false, db)
+            buildPropertyPhotoAndInsert("18", WordingConverter.fromWording(Wording.PLAN), false, db)
+        }
+
+        private fun addFourthPropertyPhotoIntoDatabase(db: SupportSQLiteDatabase) {
+            buildPropertyPhotoAndInsert("0", WordingConverter.fromWording(Wording.LIVING_ROOM), true, db)
+            buildPropertyPhotoAndInsert("1", WordingConverter.fromWording(Wording.OFFICE), false, db)
+            buildPropertyPhotoAndInsert("2", WordingConverter.fromWording(Wording.BALCONY), false, db)
+            buildPropertyPhotoAndInsert("3", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("4", WordingConverter.fromWording(Wording.VIEW), false, db)
+            buildPropertyPhotoAndInsert("5", WordingConverter.fromWording(Wording.VIEW), false, db)
+            buildPropertyPhotoAndInsert("6", WordingConverter.fromWording(Wording.PLAN), false, db)
+        }
+
+        private fun addFifthPropertyPhotoIntoDatabase(db: SupportSQLiteDatabase) {
+            buildPropertyPhotoAndInsert("0", WordingConverter.fromWording(Wording.STREET_VIEW), true, db)
+            buildPropertyPhotoAndInsert("1", WordingConverter.fromWording(Wording.HALL), false, db)
+            buildPropertyPhotoAndInsert("2", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("3", WordingConverter.fromWording(Wording.DINING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("4", WordingConverter.fromWording(Wording.KITCHEN), false, db)
+            buildPropertyPhotoAndInsert("5", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("6", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("7", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("8", WordingConverter.fromWording(Wording.OFFICE), false, db)
+            buildPropertyPhotoAndInsert("9", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("10", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("11", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("12", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("13", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("14", WordingConverter.fromWording(Wording.STAIRS), false, db)
+            buildPropertyPhotoAndInsert("15", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("16", WordingConverter.fromWording(Wording.STREET_VIEW), false, db)
+        }
+
+        private fun addSixthPropertyPhotoIntoDatabase(db: SupportSQLiteDatabase) {
+            buildPropertyPhotoAndInsert("0", WordingConverter.fromWording(Wording.STREET_VIEW), true, db)
+            buildPropertyPhotoAndInsert("1", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("2", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("3", WordingConverter.fromWording(Wording.DINING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("4", WordingConverter.fromWording(Wording.DINING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("5", WordingConverter.fromWording(Wording.KITCHEN), false, db)
+            buildPropertyPhotoAndInsert("6", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("7", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("8", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("9", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("10", WordingConverter.fromWording(Wording.OFFICE), false, db)
+            buildPropertyPhotoAndInsert("11", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("12", WordingConverter.fromWording(Wording.GARDEN), false, db)
+            buildPropertyPhotoAndInsert("13", WordingConverter.fromWording(Wording.GARDEN), false, db)
+        }
+
+        private fun addSeventhPropertyPhotoIntoDatabase(db: SupportSQLiteDatabase) {
+            buildPropertyPhotoAndInsert("0", WordingConverter.fromWording(Wording.STREET_VIEW), true, db)
+            buildPropertyPhotoAndInsert("1", WordingConverter.fromWording(Wording.HALL), false, db)
+            buildPropertyPhotoAndInsert("2", WordingConverter.fromWording(Wording.STAIRS), false, db)
+            buildPropertyPhotoAndInsert("3", WordingConverter.fromWording(Wording.DINING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("4", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("5", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("6", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("7", WordingConverter.fromWording(Wording.KITCHEN), false, db)
+            buildPropertyPhotoAndInsert("8", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("9", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("10", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("11", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("12", WordingConverter.fromWording(Wording.FLOOR), false, db)
+            buildPropertyPhotoAndInsert("13", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("14", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("15", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("16", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("17", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("18", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("19", WordingConverter.fromWording(Wording.BALCONY), false, db)
+            buildPropertyPhotoAndInsert("20", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("21", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("22", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("23", WordingConverter.fromWording(Wording.OFFICE), false, db)
+            buildPropertyPhotoAndInsert("24", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("25", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("26", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("27", WordingConverter.fromWording(Wording.TERRACE), false, db)
+            buildPropertyPhotoAndInsert("28", WordingConverter.fromWording(Wording.KITCHEN), false, db)
+            buildPropertyPhotoAndInsert("29", WordingConverter.fromWording(Wording.SWIMMING_POOL), false, db)
+            buildPropertyPhotoAndInsert("30", WordingConverter.fromWording(Wording.TERRACE), false, db)
+            buildPropertyPhotoAndInsert("31", WordingConverter.fromWording(Wording.SWIMMING_POOL), false, db)
+        }
+
+        private fun addEighthPropertyPhotoIntoDatabase(db: SupportSQLiteDatabase) {
+            buildPropertyPhotoAndInsert("0", WordingConverter.fromWording(Wording.LIVING_ROOM), true, db)
+            buildPropertyPhotoAndInsert("1", WordingConverter.fromWording(Wording.GARDEN), false, db)
+            buildPropertyPhotoAndInsert("2", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("3", WordingConverter.fromWording(Wording.STAIRS), false, db)
+            buildPropertyPhotoAndInsert("4", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("5", WordingConverter.fromWording(Wording.BALCONY), false, db)
+            buildPropertyPhotoAndInsert("6", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("7", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("8", WordingConverter.fromWording(Wording.FLOOR), false, db)
+            buildPropertyPhotoAndInsert("9", WordingConverter.fromWording(Wording.FLOOR), false, db)
+            buildPropertyPhotoAndInsert("10", WordingConverter.fromWording(Wording.HALL), false, db)
+            buildPropertyPhotoAndInsert("11", WordingConverter.fromWording(Wording.STREET_VIEW), false, db)
+        }
+
+        private fun addNinthPropertyPhotoIntoDatabase(db: SupportSQLiteDatabase) {
+            buildPropertyPhotoAndInsert("0", WordingConverter.fromWording(Wording.STAIRS), true, db)
+            buildPropertyPhotoAndInsert("1", WordingConverter.fromWording(Wording.DINING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("2", WordingConverter.fromWording(Wording.KITCHEN), false, db)
+            buildPropertyPhotoAndInsert("3", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("4", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("5", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("6", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("7", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("8", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("9", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("10", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("11", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("12", WordingConverter.fromWording(Wording.ROOF_TOP), false, db)
+            buildPropertyPhotoAndInsert("13", WordingConverter.fromWording(Wording.ROOF_TOP), false, db)
+            buildPropertyPhotoAndInsert("14", WordingConverter.fromWording(Wording.ROOF_TOP), false, db)
+            buildPropertyPhotoAndInsert("15", WordingConverter.fromWording(Wording.STAIRS), false, db)
+        }
+
+        private fun addTenthPropertyPhotoIntoDatabase(db: SupportSQLiteDatabase) {
+            buildPropertyPhotoAndInsert("0", WordingConverter.fromWording(Wording.STREET_VIEW), true, db)
+            buildPropertyPhotoAndInsert("1", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("2", WordingConverter.fromWording(Wording.DINING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("3", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("4", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+            buildPropertyPhotoAndInsert("5", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("6", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("7", WordingConverter.fromWording(Wording.BEDROOM), false, db)
+            buildPropertyPhotoAndInsert("8", WordingConverter.fromWording(Wording.LIVING_ROOM), false, db)
+            buildPropertyPhotoAndInsert("9", WordingConverter.fromWording(Wording.KITCHEN), false, db)
+            buildPropertyPhotoAndInsert("10", WordingConverter.fromWording(Wording.GARDEN), false, db)
+            buildPropertyPhotoAndInsert("11", WordingConverter.fromWording(Wording.SWIMMING_POOL), false, db)
+            buildPropertyPhotoAndInsert("12", WordingConverter.fromWording(Wording.FLOOR), false, db)
+            buildPropertyPhotoAndInsert("13", WordingConverter.fromWording(Wording.KITCHEN), false, db)
+            buildPropertyPhotoAndInsert("14", WordingConverter.fromWording(Wording.BATHROOM), false, db)
+        }
+
+        private fun buildPropertyPhotoAndInsert(name: String, wording: Int, isThisTheIllustration: Boolean, db: SupportSQLiteDatabase) {
+            contentValuesPropertyPhoto.put(NAME, name)
+            contentValuesPropertyPhoto.put(WORDING, wording)
+            contentValuesPropertyPhoto.put(IS_THIS_THE_ILLUSTRATION, isThisTheIllustration)
+            db.insert("PropertyPhoto", OnConflictStrategy.IGNORE, contentValuesPropertyPhoto)
+        }
+
+        private fun addFirstPropertyAndPropertyPhotoIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId, getPropertyPhotoId(), db)
+        }
+
+        private fun addSecondPropertyAndPropertyPhotoIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+        }
+
+        private fun addThirdPropertyAndPropertyPhotoIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+        }
+
+        private fun addFourthPropertyAndPropertyPhotoIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+        }
+
+        private fun addFifthPropertyAndPropertyPhotoIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+        }
+
+        private fun addSixthPropertyAndPropertyPhotoIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+        }
+
+        private fun addSeventhPropertyAndPropertyPhotoIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+        }
+
+        private fun addEighthPropertyAndPropertyPhotoIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+        }
+
+        private fun addNinthPropertyAndPropertyPhotoIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+        }
+
+        private fun addTenthPropertyAndPropertyPhotoIntoDatabase(propertyId: Int, db: SupportSQLiteDatabase) {
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+            buildPropertyAndPropertyPhotoAndInsert(propertyId,getPropertyPhotoId(), db)
+        }
+
+        private fun getPropertyPhotoId(): Int {
+            propertyPhotoId++
+            return propertyPhotoId
+        }
+
+        private fun buildPropertyAndPropertyPhotoAndInsert(propertyId: Int, propertyPhotoId: Int, db: SupportSQLiteDatabase) {
+            contentValuesPropertyAndPropertyPhoto.put(PROPERTY_ID, propertyId)
+            contentValuesPropertyAndPropertyPhoto.put(PROPERTY_PHOTO_ID, propertyPhotoId)
+            db.insert("PropertyAndPropertyPhoto", OnConflictStrategy.IGNORE, contentValuesPropertyAndPropertyPhoto)
         }
     }
 }
