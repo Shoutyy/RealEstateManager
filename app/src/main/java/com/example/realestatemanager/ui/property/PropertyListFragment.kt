@@ -17,6 +17,12 @@ import com.example.realestatemanager.di.ListInjection
 
 class PropertyListFragment : Fragment() {
 
+    companion object {
+        @JvmStatic
+        fun newInstance() =
+            PropertyListFragment().apply { }
+    }
+
     private var listener: OnListFragmentInteractionListener? = null
 
     private val propertyListViewModel : PropertyListViewModel by lazy { ViewModelProviders.of(this, ListInjection.provideViewModelFactory(requireContext()))[PropertyListViewModel::class.java] }
@@ -71,9 +77,4 @@ class PropertyListFragment : Fragment() {
         fun onListFragmentInteraction(propertyId: Int)
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance() =
-            PropertyListFragment().apply {}
-    }
 }

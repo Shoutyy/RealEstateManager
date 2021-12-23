@@ -12,8 +12,9 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.realestatemanager.di.DetailInjection
 import com.example.realestatemanager.model.LocationOfInterestModelProcessed
 import com.example.realestatemanager.model.PropertyDetailModelProcessed
+import com.example.realestatemanager.ui.media.MediaFragment
 
-private const val ARG_PROPERTY_ID = "ARG_PROPERTY_ID"
+private const val ARG_PROPERTY_DETAIL_PROPERTY_ID = "ARG_PROPERTY_DETAIL_PROPERTY_ID"
 
 class PropertyDetailFragment : Fragment() {
 
@@ -21,7 +22,7 @@ class PropertyDetailFragment : Fragment() {
         fun newInstance(propertyId: Int) =
             PropertyDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(ARG_PROPERTY_ID, propertyId)
+                    putInt(ARG_PROPERTY_DETAIL_PROPERTY_ID, propertyId)
                 }
             }
     }
@@ -32,7 +33,7 @@ class PropertyDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            propertyId = it.getInt(ARG_PROPERTY_ID)
+            propertyId = it.getInt(ARG_PROPERTY_DETAIL_PROPERTY_ID)
         }
     }
 
@@ -52,6 +53,7 @@ class PropertyDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         propertyDetailViewModel.getProperty(propertyId).observe(viewLifecycleOwner, Observer { updateUiWithPropertyData(it) })
         propertyDetailViewModel.getLocationsOfInterest(propertyId).observe(viewLifecycleOwner, Observer { updateUiWithLocationsOfInterestData(it) })
+        addMediaFragment()
     }
 
     private fun updateUiWithPropertyData(model: PropertyDetailModelProcessed) {
@@ -107,5 +109,12 @@ class PropertyDetailFragment : Fragment() {
                 property_detail_empty_location_of_interest.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun addMediaFragment() {
+        val mediaFragment = MediaFragment.newInstance(propertyId)
+        val fragmentTransaction = fragmentManager?.beginTransaction()
+        //activity.supportFragmentManager
+        fragmentTransaction?.add(R.id.property_detail_media_container, mediaFragment)?.commit()
     }
 }

@@ -2,14 +2,10 @@ package com.example.realestatemanager.di
 
 import android.content.Context
 import com.example.realestatemanager.database.AppDatabase
-import com.example.realestatemanager.repository.AddressDataRepository
-import com.example.realestatemanager.repository.PropertyDataRepository
-import com.example.realestatemanager.repository.AgentDataRepository
 import com.example.realestatemanager.repository.PropertyAndPropertyPhotoDataRepository
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
+import com.example.realestatemanager.repository.PropertyDataRepository
 
-class ListInjection {
+class MediaInjection {
 
     companion object {
 
@@ -18,16 +14,17 @@ class ListInjection {
             return PropertyDataRepository(database.propertyDao())
         }
 
-        private fun providePropertyAndPropertyPhotoDataSource(context: Context): PropertyAndPropertyPhotoDataRepository {
+        private fun provideCompositionPropertyAndPropertyPhotoDataSource(context: Context): PropertyAndPropertyPhotoDataRepository {
             val database = AppDatabase.getInstance(context)
             return PropertyAndPropertyPhotoDataRepository(database.propertyAndPropertyPhotoDao())
         }
 
-        fun provideViewModelFactory(context: Context): ListViewModelFactory {
+        fun provideViewModelFactory(context: Context): MediaViewModelFactory {
             val dataSourceProperty = providePropertyDataSource(context)
-            val dataSourcePropertyAndPropertyPhoto = providePropertyAndPropertyPhotoDataSource(context)
-            return ListViewModelFactory(dataSourceProperty, dataSourcePropertyAndPropertyPhoto)
+            val dataSourceCompositionPropertyAndPropertyPhoto = provideCompositionPropertyAndPropertyPhotoDataSource(context)
+            return MediaViewModelFactory(dataSourceProperty, dataSourceCompositionPropertyAndPropertyPhoto)
         }
 
     }
+
 }

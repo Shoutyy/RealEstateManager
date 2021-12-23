@@ -11,11 +11,8 @@ import java.util.concurrent.Executor
 import java.text.NumberFormat
 
 class PropertyListViewModel (
-        private val propertyDataSource: PropertyDataRepository,
-        private val addressDataSource: AddressDataRepository,
-        private val agentDataSource: AgentDataRepository,
-        private val propertyAndPropertyPhotoDataRepository: PropertyAndPropertyPhotoDataRepository,
-        private val executor: Executor) : ViewModel() {
+        propertyDataSource: PropertyDataRepository,
+        propertyAndPropertyPhotoDataRepository: PropertyAndPropertyPhotoDataRepository) : ViewModel() {
 
     private var _properties: LiveData<List<PropertyModelProcessed>> = Transformations.map(propertyDataSource.getProperties()) { it.map { property -> buildPropertyModelProcessed(property) } }
     val properties: LiveData<List<PropertyModelProcessed>> = _properties
@@ -36,8 +33,8 @@ class PropertyListViewModel (
             price = getPriceIntoStringForUi(property.price)
         )
 
-    private fun getTypeIntoStringForUi(type: Type): String {
-        return when(type) {
+    private fun getTypeIntoStringForUi(type: Type) =
+        when(type) {
             Type.PENTHOUSE -> "Penthouse"
             Type.MANSION -> "Mansion"
             Type.FLAT -> "Flat"
@@ -47,10 +44,9 @@ class PropertyListViewModel (
             Type.TOWNHOUSE -> "Townhouse"
             Type.CONDO -> "Condo"
         }
-    }
 
-    private fun getDistrictIntoStringForUi(district: District?): String? {
-        return when(district) {
+    private fun getDistrictIntoStringForUi(district: District?) =
+        when(district) {
             District.MANHATTAN -> "Manhattan"
             District.BROOKLYN -> "Brooklyn"
             District.STATEN_ISLAND -> "Staten Island"
@@ -58,11 +54,8 @@ class PropertyListViewModel (
             District.BRONX -> "Bronx"
             else -> null
         }
-    }
 
-    private fun getPriceIntoStringForUi(price: Long): String {
-        return "$" + NumberFormat.getIntegerInstance().format(price)
-    }
+    private fun getPriceIntoStringForUi(price: Long) = "$" + NumberFormat.getIntegerInstance().format(price)
 
     private fun buildUiModelForIllustration(propertyAndPropertyPhoto: PropertyAndPropertyPhoto) =
         IllustrationModelProcessed(

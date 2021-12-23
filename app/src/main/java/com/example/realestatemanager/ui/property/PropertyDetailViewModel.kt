@@ -12,16 +12,12 @@ import java.util.concurrent.Executor
 
 class PropertyDetailViewModel (
         private val propertyDataSource: PropertyDataRepository,
-        private val addressDataSource: AddressDataRepository,
-        private val agentDataSource: AgentDataRepository,
-        private val propertyAndLocationOfInterestDataSource: PropertyAndLocationOfInterestDataRepository,
-        private val executor: Executor) : ViewModel() {
+        private val propertyAndLocationOfInterestDataSource: PropertyAndLocationOfInterestDataRepository) : ViewModel() {
 
     private val dateFormat = SimpleDateFormat ("dd/MM/yyyy", Locale.getDefault())
 
-    fun getProperty(propertyId: Int): LiveData<PropertyDetailModelProcessed> {
-        return Transformations.map(propertyDataSource.getProperty(propertyId)) { buildPropertyModelProcessed(it) }
-    }
+    fun getProperty(propertyId: Int): LiveData<PropertyDetailModelProcessed> =
+        Transformations.map(propertyDataSource.getProperty(propertyId)) { buildPropertyModelProcessed(it) }
 
     private fun buildPropertyModelProcessed(property: Property) =
         PropertyDetailModelProcessed(
@@ -41,27 +37,23 @@ class PropertyDetailViewModel (
             saleDate = getSaleDateIntoStringForUi(property.saleDate)
         )
 
-    private fun surfaceIntToStringForUi(surface: Int?): String {
-        return surface.toString() + "sq ft"
-    }
+    //TODO SUPPRESS RETURN VALUE
+    private fun surfaceIntToStringForUi(surface: Int?) = surface.toString() + "sq ft"
 
-    private fun getCityIntoStringForUi(city: City?): String? {
-        return when(city) {
+    private fun getCityIntoStringForUi(city: City?) =
+        when(city) {
             City.NEW_YORK -> "New York"
             else -> null
         }
-    }
 
-    private fun getCountryIntoStringForUi(country: Country?): String? {
-        return when(country) {
+    private fun getCountryIntoStringForUi(country: Country?) =
+        when(country) {
             Country.UNITED_STATES -> "United States"
             else -> null
         }
-    }
 
-    private fun getAgentFullName(firstName: String?, name: String?): String {
-        return "$firstName $name"
-    }
+
+    private fun getAgentFullName(firstName: String?, name: String?) = "$firstName $name"
 
     private fun getEntryDateIntoStringForUi(entryDate: Long) = dateFormat.format(Date(entryDate))
 
@@ -73,9 +65,8 @@ class PropertyDetailViewModel (
             null
         }
 
-    fun getLocationsOfInterest(propertyId: Int): LiveData<LocationOfInterestModelProcessed> {
-        return Transformations.map(propertyAndLocationOfInterestDataSource.getLocationsOfInterest(propertyId)) { buildLocationOfInterestModelProcessed(it) }
-    }
+    fun getLocationsOfInterest(propertyId: Int): LiveData<LocationOfInterestModelProcessed> =
+        Transformations.map(propertyAndLocationOfInterestDataSource.getLocationsOfInterest(propertyId)) { buildLocationOfInterestModelProcessed(it) }
 
     private fun buildLocationOfInterestModelProcessed(composition: List<PropertyAndLocationOfInterest>): LocationOfInterestModelProcessed {
         var school = false

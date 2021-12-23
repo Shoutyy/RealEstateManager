@@ -28,7 +28,6 @@ class PropertyListRecyclerViewAdapter : RecyclerView.Adapter<PropertyListRecycle
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.img.setImageResource(R.drawable.ic_launcher_background)
         val property: PropertyModelProcessed = properties[position]
 
         with(holder) {
@@ -48,7 +47,7 @@ class PropertyListRecyclerViewAdapter : RecyclerView.Adapter<PropertyListRecycle
         }
     }
 
-    override fun getItemCount(): Int = properties.size
+    override fun getItemCount() = properties.size
 
     fun receivePropertiesDataAndListener(properties: List<PropertyModelProcessed>, listener: PropertyListFragment.OnListFragmentInteractionListener?) {
         this.properties.clear()
