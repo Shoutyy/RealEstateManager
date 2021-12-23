@@ -20,7 +20,7 @@ class PropertyListFragment : Fragment() {
     private var listener: OnListFragmentInteractionListener? = null
 
     private val propertyListViewModel : PropertyListViewModel by lazy { ViewModelProviders.of(this, ListInjection.provideViewModelFactory(requireContext()))[PropertyListViewModel::class.java] }
-    private val propertyListAdapter: PropertyListRecyclerViewAdapter = PropertyListRecyclerViewAdapter(/*listener*/)
+    private val propertyListAdapter: PropertyListRecyclerViewAdapter = PropertyListRecyclerViewAdapter()
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -33,12 +33,14 @@ class PropertyListFragment : Fragment() {
             adapter = propertyListAdapter
         }
         getProperties()
+        getPropertiesPhotos()
         return view
     }
 
-    private fun getProperties() {
-        propertyListViewModel.properties.observe(viewLifecycleOwner, Observer { propertyListAdapter.receiveData(it, listener) })
-    }
+    private fun getProperties() = propertyListViewModel.properties.observe(viewLifecycleOwner, Observer { propertyListAdapter.receivePropertiesDataAndListener(it, listener) })
+
+
+    private fun getPropertiesPhotos() = propertyListViewModel.illustrationsPropertiesPhotos.observe(viewLifecycleOwner, Observer { propertyListAdapter.receivePropertiesPhotos(it, requireContext()) })
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

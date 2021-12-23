@@ -1,11 +1,7 @@
 package com.example.realestatemanager
 
 import com.example.realestatemanager.database.converter.*
-import com.example.realestatemanager.model.District
-import com.example.realestatemanager.model.City
-import com.example.realestatemanager.model.Country
-import com.example.realestatemanager.model.Type
-import com.example.realestatemanager.model.LocationOfInterest
+import com.example.realestatemanager.model.*
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.sql.Date
@@ -90,6 +86,20 @@ class DateConverterTest {
     @Test
     fun toDate_IntToDistrict() {
         assertEquals(Date(1156489789561), DateConverter.toDate(1156489789561))
+    }
+
+}
+
+class WordingConverterTest {
+
+    @Test
+    fun fromWording_toInt() {
+        assertEquals(7, WordingConverter.fromWording(Wording.BEDROOM))
+    }
+
+    @Test
+    fun toWording_IntToWording() {
+        assertEquals(Wording.ROOF_TOP, WordingConverter.toWording(11))
     }
 
 }

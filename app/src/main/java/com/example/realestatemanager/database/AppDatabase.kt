@@ -30,7 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun addressDao(): AddressDao
     abstract fun agentDao(): AgentDao
     abstract fun propertyAndLocationOfInterestDao(): PropertyAndLocationOfInterestDao
-    abstract fun propertyPhotoDao(): PropertyPhotoDao
+    abstract fun propertyAndPropertyPhotoDao(): PropertyAndPropertyPhotoDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null

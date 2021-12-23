@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.property_detail_fragment.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.realestatemanager.di.DetailInjection
-import com.example.realestatemanager.model.LocationOfInterestModelsProcessed
+import com.example.realestatemanager.model.LocationOfInterestModelProcessed
 import com.example.realestatemanager.model.PropertyDetailModelProcessed
 
 private const val ARG_PROPERTY_ID = "ARG_PROPERTY_ID"
@@ -86,7 +86,7 @@ class PropertyDetailFragment : Fragment() {
         }
     }
 
-    private fun updateUiWithLocationsOfInterestData(model: LocationOfInterestModelsProcessed) {
+    private fun updateUiWithLocationsOfInterestData(model: LocationOfInterestModelProcessed) {
         with(model) {
             if (!school) {
                 property_detail_school.visibility = View.GONE

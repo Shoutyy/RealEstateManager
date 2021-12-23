@@ -20,10 +20,10 @@ class PropertyDetailViewModel (
     private val dateFormat = SimpleDateFormat ("dd/MM/yyyy", Locale.getDefault())
 
     fun getProperty(propertyId: Int): LiveData<PropertyDetailModelProcessed> {
-        return Transformations.map(propertyDataSource.getProperty(propertyId)) { buildPropertyModelsProcessed(it) }
+        return Transformations.map(propertyDataSource.getProperty(propertyId)) { buildPropertyModelProcessed(it) }
     }
 
-    private fun buildPropertyModelsProcessed(property: Property) =
+    private fun buildPropertyModelProcessed(property: Property) =
         PropertyDetailModelProcessed(
             description = property.description,
             surface = surfaceIntToStringForUi(property.surface),
@@ -73,11 +73,11 @@ class PropertyDetailViewModel (
             null
         }
 
-    fun getLocationsOfInterest(propertyId: Int): LiveData<LocationOfInterestModelsProcessed> {
-        return Transformations.map(propertyAndLocationOfInterestDataSource.getLocationsOfInterest(propertyId)) { buildLocationOfInterestModelsProcessed(it) }
+    fun getLocationsOfInterest(propertyId: Int): LiveData<LocationOfInterestModelProcessed> {
+        return Transformations.map(propertyAndLocationOfInterestDataSource.getLocationsOfInterest(propertyId)) { buildLocationOfInterestModelProcessed(it) }
     }
 
-    private fun buildLocationOfInterestModelsProcessed(composition: List<PropertyAndLocationOfInterest>): LocationOfInterestModelsProcessed {
+    private fun buildLocationOfInterestModelProcessed(composition: List<PropertyAndLocationOfInterest>): LocationOfInterestModelProcessed {
         var school = false
         var commerces= false
         var park = false
@@ -92,7 +92,7 @@ class PropertyDetailViewModel (
                 4 -> train = true
             }
         }
-        return LocationOfInterestModelsProcessed(
+        return LocationOfInterestModelProcessed(
             school = school,
             commerces = commerces,
             park = park,
