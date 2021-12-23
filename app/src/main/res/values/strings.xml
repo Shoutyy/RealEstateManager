@@ -30,6 +30,8 @@
     <string name="type">type</string>
     <string name="localisation">localisation</string>
     <string name="price">price</string>
+    <string name="illustration_property_s">Illustration property\'s</string>
+
 
     //property detail
     <string name="media">media</string>
