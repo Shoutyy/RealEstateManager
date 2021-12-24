@@ -129,6 +129,8 @@
     <string name="select_a_date">Select a date</string>
     <string name="pick_a_photo">Pick a photo</string>
 
+    <string name="default_notification_channel_id" translatable="false">default notification channel id</string>
+
     //form error
     <string name="form_error_photo">No photo selected. Please pick at least one photo.</string>
     <string name="form_error_field_empty">Field can\'t be empty.</string>

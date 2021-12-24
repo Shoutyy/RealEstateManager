@@ -3,6 +3,10 @@ package com.example.realestatemanager.ui.form
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.res.TypedArrayUtils.getString
+import com.example.realestatemanager.R
 import com.example.realestatemanager.model.*
 import com.example.realestatemanager.util.Utils
 import com.example.realestatemanager.repository.*
@@ -130,6 +134,7 @@ class FormViewModel (
                 insertPropertyPhoto(propertyPhoto, rowIdProperty)
             }
         }
+        sendNotification(formModelRaw)
     }
 
     private fun insertPropertyPhoto(propertyPhoto: PropertyPhoto, rowIdProperty: Long) =
@@ -151,6 +156,16 @@ class FormViewModel (
         executor.execute {
             propertyAndPropertyPhotoDataSource.insertPropertyPhoto(propertyAndPropertyPhoto)
         }
+
+    private fun sendNotification(formModelRaw: FormModelRaw) {
+        /*val channelId: String = getString(R.string.default_notification_channel_id)
+        val builder = NotificationCompat.Builder(formModelRaw.context, channelId)
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle("RealEstateManager")
+                .setContentText("Your property as been add.")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        NotificationManagerCompat.from(formModelRaw.context).notify(0, builder.build())*/
+    }
 
     //---FACTORY---\\
     private fun returnComplementOrNull(complement: String) = if (complement.isNotEmpty()) { complement } else { null }
