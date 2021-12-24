@@ -76,5 +76,8 @@ dependencies {
     //PickImage
     implementation 'com.github.jrvansuita:PickImage:2.2.4'
 
+    //AwesomeValidation
+    implementation 'com.basgeekball:awesome-validation:4.3'
+
     androidTestImplementation "android.arch.core:core-testing:1.1.1"
 }
