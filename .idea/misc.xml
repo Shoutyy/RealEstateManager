@@ -32,6 +32,7 @@
         <entry key="app/src/main/res/layout/toolbar.xml" value="0.25677083333333334" />
         <entry key="app/src/main/res/menu/activity_main_menu_drawer.xml" value="0.12864583333333332" />
         <entry key="app/src/main/res/menu/menu_toolbar.xml" value="0.25677083333333334" />
+        <entry key="app/src/main/res/xml/picker_provider_paths.xml" value="0.12864583333333332" />
       </map>
     </option>
   </component>

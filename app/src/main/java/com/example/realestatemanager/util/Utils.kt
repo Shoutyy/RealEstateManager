@@ -1,12 +1,15 @@
 package com.example.realestatemanager.util
 
 import android.content.Context
+import android.util.Log
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
 import android.net.ConnectivityManager
 import com.example.realestatemanager.R
 import java.text.SimpleDateFormat
@@ -86,5 +89,23 @@ object Utils {
         drawable.draw(canvas)
         return bitmap
 
+    }
+
+    fun setInternalBitmap(photo: Bitmap?, path: String, name: String, context: Context?) {
+        val folder = File(context?.filesDir, path)
+        val file = File(folder, name)
+        file.parentFile.mkdirs()
+        val fos = FileOutputStream(file)
+        try {
+            photo?.compress(Bitmap.CompressFormat.PNG, 100, fos)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            try {
+                fos.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
     }
 }

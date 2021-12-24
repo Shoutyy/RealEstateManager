@@ -31,6 +31,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun agentDao(): AgentDao
     abstract fun propertyAndLocationOfInterestDao(): PropertyAndLocationOfInterestDao
     abstract fun propertyAndPropertyPhotoDao(): PropertyAndPropertyPhotoDao
+    abstract fun propertyPhotoDao(): PropertyPhotoDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null

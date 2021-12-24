@@ -4,10 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.realestatemanager.model.*
-import com.example.realestatemanager.repository.AddressDataRepository
-import com.example.realestatemanager.repository.AgentDataRepository
-import com.example.realestatemanager.repository.PropertyAndLocationOfInterestDataRepository
-import com.example.realestatemanager.repository.PropertyDataRepository
+import com.example.realestatemanager.util.Utils
+import com.example.realestatemanager.repository.*
 import java.util.concurrent.Executor
 
 class FormViewModel (
@@ -15,6 +13,8 @@ class FormViewModel (
         private val addressDataSource: AddressDataRepository,
         agentDataSource: AgentDataRepository,
         private val propertyAndLocationOfInterestDataSource: PropertyAndLocationOfInterestDataRepository,
+        private val propertyPhotoDataSource: PropertyPhotoDataRepository,
+        private val propertyAndPropertyPhotoDataSource: PropertyAndPropertyPhotoDataRepository,
         private val executor: Executor) : ViewModel() {
 
     private var _fullNameAgents: LiveData<List<String>> = Transformations.map(agentDataSource.getAgents()) { list -> list.map { agent -> agent.firstName + " " + agent.name } }
@@ -69,6 +69,7 @@ class FormViewModel (
         executor.execute {
             val rowIdProperty = propertyDataSource.insertProperty(property)
             buildPropertyAndLocationOfInterestDataSource(formModelRaw, rowIdProperty)
+            buildPropertyPhotoAndSavePhotosOnInternalStorage(formModelRaw, rowIdProperty)
     }
 
     private fun buildPropertyAndLocationOfInterestDataSource(formModelRaw: FormModelRaw, rowIdProperty: Long) {
@@ -114,6 +115,41 @@ class FormViewModel (
     private fun insertPropertyAndLocationOfInterest(propertyAndLocationOfInterest: PropertyAndLocationOfInterest) =
         executor.execute {
             propertyAndLocationOfInterestDataSource.insertLocationOfInterest(propertyAndLocationOfInterest)
+        }
+
+    private fun buildPropertyPhotoAndSavePhotosOnInternalStorage(formModelRaw: FormModelRaw, rowIdProperty: Long) {
+        with(formModelRaw) {
+            listFormPhotoAndWording.forEachIndexed {index, formPhotoAndWording ->
+                val name = getNamePhoto(index)
+                Utils.setInternalBitmap(formPhotoAndWording.photo, path, name, context)
+                val propertyPhoto = PropertyPhoto(
+                    name = name,
+                    wording = getWordingForDatabase(formPhotoAndWording.wording),
+                    isThisTheIllustration = index == 0
+                )
+                insertPropertyPhoto(propertyPhoto, rowIdProperty)
+            }
+        }
+    }
+
+    private fun insertPropertyPhoto(propertyPhoto: PropertyPhoto, rowIdProperty: Long) =
+        executor.execute {
+            val rowIdPropertyPhoto = propertyPhotoDataSource.insertPropertyPhoto(propertyPhoto)
+            buildPropertyAndPropertyPhoto(rowIdProperty, rowIdPropertyPhoto)
+        }
+
+
+    private fun buildPropertyAndPropertyPhoto(rowIdProperty: Long, rowIdPropertyPhoto: Long) {
+        val propertyAndPropertyPhoto = PropertyAndPropertyPhoto(
+            rowIdProperty.toInt(),
+            rowIdPropertyPhoto.toInt()
+        )
+        insertPropertyAndPropertyPhoto(propertyAndPropertyPhoto)
+    }
+
+    private fun insertPropertyAndPropertyPhoto(propertyAndPropertyPhoto: PropertyAndPropertyPhoto) =
+        executor.execute {
+            propertyAndPropertyPhotoDataSource.insertPropertyPhoto(propertyAndPropertyPhoto)
         }
 
     //---FACTORY---\\
@@ -167,6 +203,36 @@ class FormViewModel (
             else -> 1
         }
 
+    private fun getWordingForDatabase(wording: String?) =
+        when(wording) {
+            "Street View" -> Wording.STREET_VIEW
+            "Living room" -> Wording.LIVING_ROOM
+            "Hall" -> Wording.HALL
+            "Kitchen" -> Wording.KITCHEN
+            "Dining room" -> Wording.DINING_ROOM
+            "Bathroom" -> Wording.BATHROOM
+            "Balcony" -> Wording.BALCONY
+            "Bedroom" -> Wording.BEDROOM
+            "Terrace" -> Wording.TERRACE
+            "Walk in closet" -> Wording.WALK_IN_CLOSET
+            "Office" -> Wording.OFFICE
+            "Roof top" -> Wording.ROOF_TOP
+            "plan" -> Wording.PLAN
+            "Hallway" -> Wording.HALLWAY
+            "View" -> Wording.VIEW
+            "Garage" -> Wording.GARAGE
+            "Swimming pool" -> Wording.SWIMMING_POOL
+            "Fitness centre" -> Wording.FITNESS_CENTRE
+            "Spa" -> Wording.SPA
+            "Cinema" -> Wording.CINEMA
+            "Conference" -> Wording.CONFERENCE
+            "Stairs" -> Wording.STAIRS
+            "Garden" -> Wording.GARDEN
+            "Floor" -> Wording.FLOOR
+            else -> Wording.STREET_VIEW
+        }
+
+    private fun getNamePhoto(index: Int) = "$index.png"
 }
 
 

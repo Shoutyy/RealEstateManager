@@ -9,6 +9,7 @@ import androidx.room.ForeignKey
 
 class PropertyAndPropertyPhoto (
     val propertyId: Int,
-    val propertyPhotoId: Int,
+    val propertyPhotoId: Int
+) {
     @Embedded var propertyPhoto: PropertyPhoto? = null
-)
+}

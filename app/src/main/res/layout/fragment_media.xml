@@ -2,8 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="140dp"
     android:layout_height="160dp"
-    android:layout_margin="4dp"
-    android:orientation="horizontal">
+    android:layout_margin="4dp">
 
     <ImageView
         android:id="@+id/media_photo"
@@ -12,7 +11,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_launcher_background"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:contentDescription="@string/many_photos_of_the_property" /> />
+        android:contentDescription="@string/many_photos_of_the_property" />
 
     <LinearLayout
         android:layout_width="match_parent"

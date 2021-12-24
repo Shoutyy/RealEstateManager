@@ -2,10 +2,7 @@ package com.example.realestatemanager.di
 
 import android.content.Context
 import com.example.realestatemanager.database.AppDatabase
-import com.example.realestatemanager.repository.AddressDataRepository
-import com.example.realestatemanager.repository.AgentDataRepository
-import com.example.realestatemanager.repository.PropertyAndLocationOfInterestDataRepository
-import com.example.realestatemanager.repository.PropertyDataRepository
+import com.example.realestatemanager.repository.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -28,9 +25,19 @@ class FormInjection {
             return AgentDataRepository(database.agentDao())
         }
 
-        private fun provideCompositionPropertyAndLocationOfInterestDataSource(context: Context): PropertyAndLocationOfInterestDataRepository {
+        private fun providePropertyAndLocationOfInterestDataSource(context: Context): PropertyAndLocationOfInterestDataRepository {
             val database = AppDatabase.getInstance(context)
             return PropertyAndLocationOfInterestDataRepository(database.propertyAndLocationOfInterestDao())
+        }
+
+        private fun providePropertyPhotoDataSource(context: Context): PropertyPhotoDataRepository {
+            val database = AppDatabase.getInstance(context)
+            return PropertyPhotoDataRepository(database.propertyPhotoDao())
+        }
+
+        private fun providePropertyAndPropertyPhoto(context: Context): PropertyAndPropertyPhotoDataRepository {
+            val database = AppDatabase.getInstance(context)
+            return PropertyAndPropertyPhotoDataRepository(database.propertyAndPropertyPhotoDao())
         }
 
         private fun provideExecutor() : Executor {
@@ -41,9 +48,17 @@ class FormInjection {
             val dataSourceProperty = providePropertyDataSource(context)
             val dataSourceAddress = provideAddressDataSource(context)
             val dataSourceAgent = provideAgentDataSource(context)
-            val dataSourceCompositionPropertyAndLocationOfInterest = provideCompositionPropertyAndLocationOfInterestDataSource(context)
+            val dataSourcePropertyAndLocationOfInterest = providePropertyAndLocationOfInterestDataSource(context)
+            val dataSourcePropertyPhoto = providePropertyPhotoDataSource(context)
+            val dataSourcePropertyAndPropertyPhoto = providePropertyAndPropertyPhoto(context)
             val executor = provideExecutor()
-            return FormViewModelFactory(dataSourceProperty, dataSourceAddress, dataSourceAgent, dataSourceCompositionPropertyAndLocationOfInterest, executor)
+            return FormViewModelFactory(dataSourceProperty,
+                dataSourceAddress,
+                dataSourceAgent,
+                dataSourcePropertyAndLocationOfInterest,
+                dataSourcePropertyPhoto,
+                dataSourcePropertyAndPropertyPhoto,
+                executor)
         }
 
     }
