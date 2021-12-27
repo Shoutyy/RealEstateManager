@@ -12,7 +12,7 @@ import com.example.realestatemanager.util.Utils
 import com.example.realestatemanager.repository.*
 import java.util.concurrent.Executor
 
-class FormViewModel (
+class AddFormViewModel (
         private val propertyDataSource: PropertyDataRepository,
         private val addressDataSource: AddressDataRepository,
         agentDataSource: AgentDataRepository,
@@ -158,7 +158,7 @@ class FormViewModel (
         }
 
     private fun sendNotification(formModelRaw: FormModelRaw) {
-        /*val channelId: String = getString(R.string.default_notification_channel_id)
+        /*
         val builder = NotificationCompat.Builder(formModelRaw.context, channelId)
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentTitle("RealEstateManager")

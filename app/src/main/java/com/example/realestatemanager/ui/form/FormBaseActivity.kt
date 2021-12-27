@@ -14,74 +14,59 @@ import com.example.realestatemanager.ui.form.FormMediaFragment
 import com.example.realestatemanager.model.FormPhotoAndWording
 import com.basgeekball.awesomevalidation.AwesomeValidation
 import com.basgeekball.awesomevalidation.ValidationStyle
-import com.basgeekball.awesomevalidation.utility.RegexTemplate
 import com.vansuita.pickimage.bean.PickResult
 import com.vansuita.pickimage.bundle.PickSetup
 import com.vansuita.pickimage.dialog.PickImageDialog
 import com.vansuita.pickimage.listeners.IPickResult
-import androidx.lifecycle.ViewModelProviders
-import com.example.realestatemanager.di.FormInjection
-import com.example.realestatemanager.model.FormModelRaw
 import java.text.SimpleDateFormat
 import java.util.*
-import android.os.Bundle
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.example.realestatemanager.R
 import kotlinx.android.synthetic.main.form.*
 import kotlinx.android.synthetic.main.toolbar.*
 
-class FormActivity : AppCompatActivity(), IPickResult, FormMediaFragment.OnListFragmentInteractionListener {
-
-    private val formViewModel: FormViewModel by lazy { ViewModelProviders.of(this, FormInjection.provideViewModelFactory(applicationContext))[FormViewModel::class.java] }
+abstract class FormBaseActivity: AppCompatActivity(), IPickResult, FormMediaFragment.OnListFragmentInteractionListener {
 
     private val formMediaFragment = FormMediaFragment.newInstance()
 
     private var calendar = Calendar.getInstance()
     private var photo: Bitmap? = null
     private var wording: String = ""
-    private val listFormPhotoAndWording = mutableListOf<FormPhotoAndWording>()
-    private val mAwesomeValidation = AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT)
+    protected val listFormPhotoAndWording = mutableListOf<FormPhotoAndWording>()
+    protected val mAwesomeValidation = AwesomeValidation(ValidationStyle.TEXT_INPUT_LAYOUT)
 
-    private var path: String = ""
-    private var complement: String = ""
-    private var district: String = ""
-    private var city: String = ""
-    private var postalCode: String = ""
-    private var country: String = ""
-    private var price: String = ""
-    private var description: String = ""
-    private var type: String = ""
-    private var surface: String = ""
-    private var rooms: String = ""
-    private var bathrooms: String = ""
-    private var bedrooms: String = ""
-    private var fullNameAgent: String = ""
-    private var school: Boolean = false
-    private var commerces: Boolean = false
-    private var park: Boolean = false
-    private var subways: Boolean = false
-    private var train: Boolean = false
-    private var available: Boolean = true
-    private var entryDate: Long = 0
+    protected var path: String = ""
+    protected var complement: String = ""
+    protected var district: String = ""
+    protected var city: String = ""
+    protected var postalCode: String = ""
+    protected var country: String = ""
+    protected var price: String = ""
+    protected var description: String = ""
+    protected var type: String = ""
+    protected var surface: String = ""
+    protected var rooms: String = ""
+    protected var bathrooms: String = ""
+    protected var bedrooms: String = ""
+    protected var fullNameAgent: String = ""
+    protected var school: Boolean = false
+    protected var commerces: Boolean = false
+    protected var park: Boolean = false
+    protected var subways: Boolean = false
+    protected var train: Boolean = false
+    protected var available: Boolean = true
+    protected var entryDate: Long = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.form)
+    protected abstract fun getAgentsNameForDropDownMenu()
+    protected abstract fun shareModelToTheViewModel()
 
-        configureToolbar()
-        fillEveryDropDownMenu()
-        addEveryListener()
-        addMediaFormFragment()
-        setEveryAwesomeValidation()
-    }
-
-    private fun configureToolbar() {
+    protected fun configureToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    private fun fillEveryDropDownMenu() {
+    protected fun fillEveryDropDownMenu() {
         //Wording //
         form_wording.setOnTouchListener { _, _ ->
             form_wording.showDropDown()
@@ -117,15 +102,15 @@ class FormActivity : AppCompatActivity(), IPickResult, FormMediaFragment.OnListF
             form_type.setAdapter(adapter)
         }
         //Agent
-        formViewModel.fullNameAgents.observe(this, androidx.lifecycle.Observer { setDropDownMenuForAgentField(it) })
+        getAgentsNameForDropDownMenu()
     }
 
-    private fun setDropDownMenuForAgentField(fullNameAgents: List<String>) {
+    protected fun setDropDownMenuForAgentField(fullNameAgents: List<String>) {
         val adapter = ArrayAdapter(this, R.layout.dropdown_menu_form_item, fullNameAgents)
         form_full_name_agent.setAdapter(adapter)
     }
 
-    private fun addEveryListener() {
+    protected fun addEveryListener() {
         form_photo_button.setOnClickListener { PickImageDialog.build(PickSetup()).show(this) } /*Possibility to take a video*/
         form_wording.doAfterTextChanged { wording = it.toString() }
         form_add_button_photo.setOnClickListener { checkIfFormPhotoAndWordingIsCompleted() }
@@ -176,7 +161,7 @@ class FormActivity : AppCompatActivity(), IPickResult, FormMediaFragment.OnListF
         }
     }
 
-    private fun shareListToMediaFormFragment() {
+    protected fun shareListToMediaFormFragment() {
         formMediaFragment.shareNewElementsInListToRecyclerView(listFormPhotoAndWording)
         resetPhotoButton()
     }
@@ -222,69 +207,7 @@ class FormActivity : AppCompatActivity(), IPickResult, FormMediaFragment.OnListF
         }
     }
 
-        private fun shareModelToTheViewModel() {
-            checkIfFormIsFilled()
-            if (listFormPhotoAndWording.isNotEmpty()
-                && path.isNotEmpty()
-                && district.isNotEmpty()
-                && city.isNotEmpty()
-                && postalCode.isNotEmpty()
-                && country.isNotEmpty()
-                && price.isNotEmpty()
-                && type.isNotEmpty()
-                && surface.isNotEmpty()
-                && rooms.isNotEmpty()
-                && bathrooms.isNotEmpty()
-                && bedrooms.isNotEmpty()
-                && fullNameAgent.isNotEmpty()
-                && entryDate > 0) {
-                val formModelRaw = FormModelRaw(
-                    listFormPhotoAndWording = listFormPhotoAndWording,
-                    path = path,
-                    complement = complement,
-                    district = district,
-                    city = city,
-                    postalCode = postalCode,
-                    country = country,
-                    price = price,
-                    description = description,
-                    type = type,
-                    surface= surface,
-                    rooms = rooms,
-                    bathrooms = bathrooms,
-                    bedrooms = bedrooms,
-                    fullNameAgent = fullNameAgent,
-                    school = school,
-                    commerces = commerces,
-                    park = park,
-                    subways = subways,
-                    train = train,
-                    available = available,
-                    entryDate = entryDate,
-                    context = applicationContext
-                )
-                formViewModel.startBuildingModelsForDatabase(formModelRaw)
-                finish()
-        }
-    }
-
-    private fun checkIfFormIsFilled() {
-        mAwesomeValidation.validate()
-        if (listFormPhotoAndWording.isEmpty()) {
-            form_error_photo.visibility = View.VISIBLE
-        } else {
-            form_error_photo.visibility = View.GONE
-        }
-        if (entryDate <= 0) {
-            form_error_date.visibility = View.VISIBLE
-        } else {
-            form_error_date.visibility = View.GONE
-        }
-    }
-
-
-
-    private fun addMediaFormFragment() {
+    protected fun addMediaFormFragment() {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.add(R.id.form_property_photo_container, formMediaFragment).commit()
     }
@@ -302,22 +225,6 @@ class FormActivity : AppCompatActivity(), IPickResult, FormMediaFragment.OnListF
             }
             .setNegativeButton("No", null)
             .show()
-    }
-
-    private fun setEveryAwesomeValidation() {
-        mAwesomeValidation.addValidation(this, R.id.form_path_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_district_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_city_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_postal_code_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_country_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_description_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_price_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_type_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_square_meters_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_rooms_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_bathrooms_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_bedrooms_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_agent_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
     }
 
 }

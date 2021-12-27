@@ -1,12 +1,13 @@
 package com.example.realestatemanager.di
 
+
 import android.content.Context
 import com.example.realestatemanager.database.AppDatabase
 import com.example.realestatemanager.repository.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
-class FormInjection {
+class UpdateFormInjection {
 
     companion object {
 
@@ -44,20 +45,20 @@ class FormInjection {
             return Executors.newSingleThreadExecutor()
         }
 
-        fun provideViewModelFactory(context: Context): FormViewModelFactory {
+        fun provideViewModelFactory(context: Context): UpdateFormViewModelFactory {
             val dataSourceProperty = providePropertyDataSource(context)
             val dataSourceAddress = provideAddressDataSource(context)
             val dataSourceAgent = provideAgentDataSource(context)
-            val dataSourcePropertyAndLocationOfInterest = providePropertyAndLocationOfInterestDataSource(context)
+            val dataSourceCompositionPropertyAndLocationOfInterest = providePropertyAndLocationOfInterestDataSource(context)
             val dataSourcePropertyPhoto = providePropertyPhotoDataSource(context)
-            val dataSourcePropertyAndPropertyPhoto = providePropertyAndPropertyPhoto(context)
+            val dataSourceCompositionPropertyAndPropertyPhoto = providePropertyAndPropertyPhoto(context)
             val executor = provideExecutor()
-            return FormViewModelFactory(dataSourceProperty,
+            return UpdateFormViewModelFactory(dataSourceProperty,
                 dataSourceAddress,
                 dataSourceAgent,
-                dataSourcePropertyAndLocationOfInterest,
+                dataSourceCompositionPropertyAndLocationOfInterest,
                 dataSourcePropertyPhoto,
-                dataSourcePropertyAndPropertyPhoto,
+                dataSourceCompositionPropertyAndPropertyPhoto,
                 executor)
         }
 

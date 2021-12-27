@@ -1,6 +1,6 @@
 package com.example.realestatemanager.model
 
-class LocationOfInterestModelProcessed (
+class LocationsOfInterestModelProcessed (
     val school: Boolean,
     val commerces: Boolean,
     val park: Boolean,

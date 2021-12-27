@@ -30,9 +30,13 @@
             android:parentActivityName=".ui.MainActivity">
         </activity>
         <activity
-            android:name=".ui.form.FormActivity"
-            android:label="Add a new property"
+            android:name=".ui.form.FormBaseActivity"
+            android:label="Add property"
             android:parentActivityName=".ui.MainActivity">
+        </activity>
+        <activity
+            android:name=".ui.form.UpdateFormActivity"
+            android:label="Update property">
         </activity>
         <provider
             android:name="androidx.core.content.FileProvider"

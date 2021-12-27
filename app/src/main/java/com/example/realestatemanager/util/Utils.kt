@@ -88,7 +88,6 @@ object Utils {
         drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
         drawable.draw(canvas)
         return bitmap
-
     }
 
     fun setInternalBitmap(photo: Bitmap?, path: String, name: String, context: Context?) {

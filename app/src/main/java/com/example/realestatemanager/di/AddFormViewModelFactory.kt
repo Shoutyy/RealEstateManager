@@ -2,12 +2,12 @@ package com.example.realestatemanager.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.realestatemanager.ui.form.FormViewModel
+import com.example.realestatemanager.ui.form.AddFormViewModel
 import com.example.realestatemanager.repository.*
 import java.lang.IllegalArgumentException
 import java.util.concurrent.Executor
 
-class FormViewModelFactory(
+class AddFormViewModelFactory(
         private val propertyDataSource: PropertyDataRepository,
         private val addressDataSource: AddressDataRepository,
         private val agentDataSource: AgentDataRepository,
@@ -17,8 +17,8 @@ class FormViewModelFactory(
         private val executor: Executor): ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(FormViewModel::class.java)) {
-            return FormViewModel(propertyDataSource,
+        if (modelClass.isAssignableFrom(AddFormViewModel::class.java)) {
+            return AddFormViewModel(propertyDataSource,
                 addressDataSource,
                 agentDataSource,
                 propertyAndLocationOfInterestDataSource,

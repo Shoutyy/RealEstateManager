@@ -5,7 +5,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import com.example.realestatemanager.R
 import kotlinx.android.synthetic.main.toolbar.*
-import com.example.realestatemanager.ui.INTENT_PROPERTY_ID
+import android.content.Intent
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
+import com.example.realestatemanager.ui.INTENT_MAIN_TO_DETAIL
+import com.example.realestatemanager.ui.form.UpdateFormActivity
+
+
+const val INTENT_DETAIL_TO_UPDATE = "INTENT_DETAIL_TO_UPDATE"
 
 class PropertyDetailActivity : AppCompatActivity() {
 
@@ -15,20 +23,42 @@ class PropertyDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_property_detail)
 
-        retrieveIntent()
+        retrievesIntent()
         configureToolbar()
         initAndAddFragment()
     }
 
-    private fun retrieveIntent() {
-        if (intent.hasExtra(INTENT_PROPERTY_ID)) {
-            propertyId = intent.getIntExtra(INTENT_PROPERTY_ID, 0)
+    private fun retrievesIntent() {
+        if (intent.hasExtra(INTENT_MAIN_TO_DETAIL)) {
+            propertyId = intent.getIntExtra(INTENT_MAIN_TO_DETAIL, 0)
         }
     }
 
     private fun configureToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.detail_menu_toolbar_phone, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.update_button -> {
+                if (propertyId != 0) {
+                    val intent = Intent(this, UpdateFormActivity::class.java)
+                    intent.putExtra(INTENT_DETAIL_TO_UPDATE, propertyId)
+                    startActivity(intent)
+                } else {
+                    //TODO: STRING
+                    Toast.makeText(this, "Something wrong append !", Toast.LENGTH_LONG).show()
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun initAndAddFragment() {

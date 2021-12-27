@@ -1,8 +1,10 @@
 package com.example.realestatemanager.ui
 
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import com.example.realestatemanager.R
+import android.util.Log
+import android.widget.Toast
+import android.os.Bundle
 import kotlinx.android.synthetic.main.toolbar.*
 import android.view.Menu
 import android.view.MenuItem
@@ -12,14 +14,15 @@ import kotlinx.android.synthetic.main.activity_main.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import android.content.Intent
-import kotlinx.android.synthetic.main.toolbar.*
-import com.example.realestatemanager.ui.form.FormActivity
+import com.example.realestatemanager.ui.form.FormBaseActivity
 import com.example.realestatemanager.ui.property.PropertyDetailActivity
 import com.example.realestatemanager.ui.property.PropertyDetailFragment
 import com.example.realestatemanager.ui.property.PropertyListFragment
 import com.example.realestatemanager.ui.emptyPropertyDetail.EmptyPropertyDetailFragment
+import com.example.realestatemanager.ui.form.UpdateFormActivity
 
-const val INTENT_PROPERTY_ID = "INTENT_PROPERTY_ID"
+const val INTENT_MAIN_TO_DETAIL = "INTENT_MAIN_TO_DETAIL"
+const val INTENT_MAIN_TO_UPDATE = "INTENT_MAIN_TO_UPDATE"
 
 class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInteractionListener {
 
@@ -34,18 +37,32 @@ class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInt
 
     private fun configureToolbar() { setSupportActionBar(toolbar) }
 
-    //inflate the menu and add it to the Toolbar
+    //inflate the appropriate menu and add it to the Toolbar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_toolbar, menu)
-        return true
+        if (activity_property_detail_container != null) {
+            menuInflater.inflate(R.menu.main_menu_toolbar_tablet, menu)
+        } else {
+            menuInflater.inflate(R.menu.main_menu_toolbar_phone, menu)
+        }
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
-            R.id.search_button -> { println("do something"); true }
-            R.id.update_button -> { println("do something"); true }
+            R.id.search_button -> { Log.e("Search","do something"); true }
+            R.id.update_button -> {
+                if (fragmentPropertyDetail != null) {
+                    val intent = Intent(this, UpdateFormActivity::class.java)
+                    intent.putExtra(INTENT_MAIN_TO_UPDATE, propertyId)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(this, R.string.update_button_select_property_first, Toast.LENGTH_LONG).show()
+                }
+                true
+            }
             R.id.add_button -> {
-                val intent = Intent(this, FormActivity::class.java)
+                val intent = Intent(this, FormBaseActivity::class.java)
+                intent.putExtra(INTENT_MAIN_TO_UPDATE, propertyId)
                 startActivity(intent)
                 true
             }
@@ -73,16 +90,14 @@ class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInt
 
     //fragment
     private var fragmentTransaction: FragmentTransaction = supportFragmentManager.beginTransaction()
-    private lateinit var fragmentPropertyList: PropertyListFragment
+    private val fragmentPropertyList = PropertyListFragment.newInstance()
     private var fragmentPropertyDetail: PropertyDetailFragment? = null
     private var fragmentEmptyPropertyDetail: EmptyPropertyDetailFragment? = null
-    private var containerPropertyDetail: Fragment? = null
+    private var containerPropertyDetail: Fragment? = supportFragmentManager.findFragmentById(R.id.activity_property_detail_container)
     private var propertyId: Int = 0
 
     private fun initAndAddFragment() {
-        fragmentPropertyList = PropertyListFragment.newInstance()
         fragmentTransaction.add(R.id.activity_property_list_container, fragmentPropertyList)
-        containerPropertyDetail = supportFragmentManager.findFragmentById(R.id.activity_property_detail_container)
         if (containerPropertyDetail == null && activity_property_detail_container != null) {
             fragmentEmptyPropertyDetail = EmptyPropertyDetailFragment.newInstance()
             fragmentTransaction.add(R.id.activity_property_detail_container, fragmentEmptyPropertyDetail!!)
@@ -94,7 +109,7 @@ class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInt
         this.propertyId = propertyId
         if (fragmentPropertyDetail == null && fragmentEmptyPropertyDetail == null) {
             val intent = Intent(this, PropertyDetailActivity::class.java)
-            intent.putExtra(INTENT_PROPERTY_ID, propertyId)
+            intent.putExtra(INTENT_MAIN_TO_DETAIL, propertyId)
             startActivity(intent)
         }   else if (fragmentPropertyDetail == null && fragmentEmptyPropertyDetail != null) {
             addFragment(propertyId, fragmentEmptyPropertyDetail!!)

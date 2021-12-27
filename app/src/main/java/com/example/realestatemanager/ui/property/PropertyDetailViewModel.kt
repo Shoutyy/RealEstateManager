@@ -2,13 +2,10 @@ package com.example.realestatemanager.ui.property
 
 import androidx.lifecycle.*
 import com.example.realestatemanager.model.*
-import com.example.realestatemanager.repository.AddressDataRepository
-import com.example.realestatemanager.repository.AgentDataRepository
 import com.example.realestatemanager.repository.PropertyDataRepository
 import com.example.realestatemanager.repository.PropertyAndLocationOfInterestDataRepository
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.Executor
 
 class PropertyDetailViewModel (
         private val propertyDataSource: PropertyDataRepository,
@@ -64,10 +61,10 @@ class PropertyDetailViewModel (
             null
         }
 
-    fun getLocationsOfInterest(propertyId: Int): LiveData<LocationOfInterestModelProcessed> =
+    fun getLocationsOfInterest(propertyId: Int): LiveData<LocationsOfInterestModelProcessed> =
         Transformations.map(propertyAndLocationOfInterestDataSource.getLocationsOfInterest(propertyId)) { buildLocationOfInterestModelProcessed(it) }
 
-    private fun buildLocationOfInterestModelProcessed(composition: List<PropertyAndLocationOfInterest>): LocationOfInterestModelProcessed {
+    private fun buildLocationOfInterestModelProcessed(composition: List<PropertyAndLocationOfInterest>): LocationsOfInterestModelProcessed {
         var school = false
         var commerces= false
         var park = false
@@ -82,7 +79,7 @@ class PropertyDetailViewModel (
                 4 -> train = true
             }
         }
-        return LocationOfInterestModelProcessed(
+        return LocationsOfInterestModelProcessed(
             school = school,
             commerces = commerces,
             park = park,
