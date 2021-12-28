@@ -1,6 +1,6 @@
 package com.example.realestatemanager.ui.property
 
-import android.content.Context
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,15 +11,13 @@ import android.widget.TextView
 import com.example.realestatemanager.model.PropertyModelProcessed
 import com.example.realestatemanager.model.IllustrationModelProcessed
 import kotlinx.android.synthetic.main.fragment_property.view.*
-import com.example.realestatemanager.util.Utils
 
 
 class PropertyListRecyclerViewAdapter : RecyclerView.Adapter<PropertyListRecyclerViewAdapter.ViewHolder>() {
 
     private val properties = mutableListOf<PropertyModelProcessed>()
     private var mListener: PropertyListFragment.OnListFragmentInteractionListener? = null
-    private val propertiesPhotos = mutableListOf<IllustrationModelProcessed>()
-    private var context: Context? = null
+    private val illustrations = mutableListOf<IllustrationModelProcessed>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -37,10 +35,10 @@ class PropertyListRecyclerViewAdapter : RecyclerView.Adapter<PropertyListRecycle
             mView.setOnClickListener { mListener?.onListFragmentInteraction(property.propertyId) }
         }
 
-        if(propertiesPhotos.isNotEmpty()) {
-            for (propertyPhoto in propertiesPhotos) {
-                if (propertyPhoto.propertyId == property.propertyId) {
-                    holder.img.setImageBitmap(Utils.getInternalBitmap(property.path, propertyPhoto.photoName, context))
+        if(illustrations.isNotEmpty()) {
+            for (illustration in illustrations) {
+                if (illustration.propertyId == property.propertyId) {
+                    holder.img.setImageBitmap(illustration.illustration)
                     break
                 }
             }
@@ -56,10 +54,9 @@ class PropertyListRecyclerViewAdapter : RecyclerView.Adapter<PropertyListRecycle
         notifyDataSetChanged()
     }
 
-    fun receivePropertiesPhotos(propertiesPhotos: List<IllustrationModelProcessed>, context: Context) {
-        this.propertiesPhotos.clear()
-        this.propertiesPhotos.addAll(propertiesPhotos)
-        this.context = context
+    fun receiveIllustrations(illustrations: List<IllustrationModelProcessed>) {
+        this.illustrations.clear()
+        this.illustrations.addAll(illustrations)
         notifyDataSetChanged()
     }
 

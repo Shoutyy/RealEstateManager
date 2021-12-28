@@ -1,5 +1,7 @@
 package com.example.realestatemanager.ui.media
 
+import android.content.Context
+import com.example.realestatemanager.util.Utils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
@@ -8,21 +10,23 @@ import com.example.realestatemanager.model.Wording
 import com.example.realestatemanager.model.PhotoModelProcessed
 import com.example.realestatemanager.repository.PropertyAndPropertyPhotoDataRepository
 import com.example.realestatemanager.repository.PropertyDataRepository
-import java.util.concurrent.Executor
 
 class MediaViewModel(
     private val propertyDataSource: PropertyDataRepository,
-    private val compositionPropertyAndPropertyPhotoDataSource: PropertyAndPropertyPhotoDataRepository) : ViewModel() {
+    private val propertyAndPropertyPhotoDataSource: PropertyAndPropertyPhotoDataRepository) : ViewModel() {
 
-    fun getPropertyPhotos(propertyId: Int): LiveData<List<PhotoModelProcessed>> =
-        Transformations.map(compositionPropertyAndPropertyPhotoDataSource.getPropertyPhotos(propertyId)) { it.map { propertyPhoto -> buildPhotoModelProcessed(propertyPhoto) } }
+
 
     fun getPropertyPath(propertyId: Int): LiveData<String> =
         Transformations.map(propertyDataSource.getProperty(propertyId)) { it.address?.path }
 
-    private fun buildPhotoModelProcessed(propertyPhoto: PropertyAndPropertyPhoto) =
+    fun getPropertyPhotos(propertyId: Int, path: String?, context: Context): LiveData<List<PhotoModelProcessed>> =
+        Transformations.map(propertyAndPropertyPhotoDataSource.getPropertyPhotos(propertyId)) { it.map { propertyPhoto -> buildPhotoModelProcessed(propertyPhoto, path, context) } }
+
+    //factory
+    private fun buildPhotoModelProcessed(propertyPhoto: PropertyAndPropertyPhoto, path: String?, context: Context?) =
         PhotoModelProcessed(
-            name = propertyPhoto.propertyPhoto?.name,
+            photo = Utils.getInternalBitmap(path, propertyPhoto.propertyPhoto?.name, context),
             wording = getWordingIntoStringForUi(propertyPhoto.propertyPhoto?.wording)
         )
 
@@ -52,6 +56,6 @@ class MediaViewModel(
             Wording.STAIRS -> "Stairs"
             Wording.GARDEN -> "Garden"
             Wording.FLOOR -> "Floor"
-            else -> null
+            else -> "Wording unknown"
         }
 }

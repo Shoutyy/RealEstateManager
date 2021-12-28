@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.realestatemanager.ui.media.MediaViewModel
 import com.example.realestatemanager.repository.PropertyAndPropertyPhotoDataRepository
 import com.example.realestatemanager.repository.PropertyDataRepository
-import java.util.concurrent.Executor
 
 class MediaViewModelFactory (
     private val propertyDataSource: PropertyDataRepository,

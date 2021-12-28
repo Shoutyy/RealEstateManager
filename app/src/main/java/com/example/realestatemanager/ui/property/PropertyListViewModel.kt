@@ -1,29 +1,26 @@
 package com.example.realestatemanager.ui.property
 
 import androidx.lifecycle.*
+import android.content.Context
+import android.graphics.Bitmap
+import com.example.realestatemanager.util.Utils
 import com.example.realestatemanager.model.*
-import com.example.realestatemanager.repository.AddressDataRepository
 import com.example.realestatemanager.repository.PropertyDataRepository
-import com.example.realestatemanager.repository.AgentDataRepository
 import com.example.realestatemanager.repository.PropertyPhotoDataRepository
 import com.example.realestatemanager.repository.PropertyAndPropertyPhotoDataRepository
-import java.util.concurrent.Executor
 import java.text.NumberFormat
 
 class PropertyListViewModel (
         propertyDataSource: PropertyDataRepository,
-        propertyAndPropertyPhotoDataRepository: PropertyAndPropertyPhotoDataRepository) : ViewModel() {
+        private val propertyAndPropertyPhotoDataRepository: PropertyAndPropertyPhotoDataRepository) : ViewModel() {
 
     private var _properties: LiveData<List<PropertyModelProcessed>> = Transformations.map(propertyDataSource.getProperties()) { it.map { property -> buildPropertyModelProcessed(property) } }
     val properties: LiveData<List<PropertyModelProcessed>> = _properties
 
-    private var _illustrationsPropertiesPhotos: LiveData<List<IllustrationModelProcessed>> =
-        Transformations.map(propertyAndPropertyPhotoDataRepository.getIllustrationPropertyPhotos(true)) {
-            it.map { propertyAndPropertyPhoto -> buildUiModelForIllustration(propertyAndPropertyPhoto) }
-        }
+    fun getPropertyIllustration(propertyId: Int, path: String?, context: Context): LiveData<IllustrationModelProcessed> =
+        Transformations.map(propertyAndPropertyPhotoDataRepository.getPropertyIllustration(propertyId, true)) { getIllustrationModelProcessed(it, path, context) }
 
-    val illustrationsPropertiesPhotos: LiveData<List<IllustrationModelProcessed>> = _illustrationsPropertiesPhotos
-
+    //factory
     private fun buildPropertyModelProcessed(property: Property) =
         PropertyModelProcessed(
             propertyId = property.id,
@@ -52,14 +49,14 @@ class PropertyListViewModel (
             District.STATEN_ISLAND -> "Staten Island"
             District.QUEENS -> "Queens"
             District.BRONX -> "Bronx"
-            else -> null
+            else -> "District unknown"
         }
 
     private fun getPriceIntoStringForUi(price: Long) = "$" + NumberFormat.getIntegerInstance().format(price)
 
-    private fun buildUiModelForIllustration(propertyAndPropertyPhoto: PropertyAndPropertyPhoto) =
+    private fun getIllustrationModelProcessed(composition: PropertyAndPropertyPhoto, path: String?, context: Context) =
         IllustrationModelProcessed(
-            propertyId = propertyAndPropertyPhoto.propertyId,
-            photoName = propertyAndPropertyPhoto.propertyPhoto?.name
+            propertyId = composition.propertyId,
+            illustration = Utils.getInternalBitmap(path, composition.propertyPhoto?.name, context)
         )
 }

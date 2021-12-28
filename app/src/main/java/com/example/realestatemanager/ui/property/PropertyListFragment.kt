@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.fragment.app.Fragment
 import com.example.realestatemanager.di.ListInjection
+import com.example.realestatemanager.model.IllustrationModelProcessed
 
 
 class PropertyListFragment : Fragment() {
@@ -28,6 +29,7 @@ class PropertyListFragment : Fragment() {
     private val propertyListViewModel : PropertyListViewModel by lazy { ViewModelProviders.of(this, ListInjection.provideViewModelFactory(requireContext()))[PropertyListViewModel::class.java] }
     private val propertyListAdapter: PropertyListRecyclerViewAdapter = PropertyListRecyclerViewAdapter()
 
+    private val illustrations = mutableListOf<IllustrationModelProcessed>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
@@ -39,14 +41,20 @@ class PropertyListFragment : Fragment() {
             adapter = propertyListAdapter
         }
         getProperties()
-        getPropertiesPhotos()
         return view
     }
 
-    private fun getProperties() = propertyListViewModel.properties.observe(viewLifecycleOwner, Observer { propertyListAdapter.receivePropertiesDataAndListener(it, listener) })
+    private fun getProperties() =
+        propertyListViewModel.properties.observe(viewLifecycleOwner, Observer {
+            propertyListAdapter.receivePropertiesDataAndListener(it, listener)
+            it.map { property -> getPropertyIllustration(property.propertyId, property.path) }
+        })
 
-
-    private fun getPropertiesPhotos() = propertyListViewModel.illustrationsPropertiesPhotos.observe(viewLifecycleOwner, Observer { propertyListAdapter.receivePropertiesPhotos(it, requireContext()) })
+    private fun getPropertyIllustration(propertyId: Int, path: String?) =
+        propertyListViewModel.getPropertyIllustration(propertyId, path, requireContext()).observe(this, Observer {
+            illustrations.add(it)
+            propertyListAdapter.receiveIllustrations(illustrations)
+        })
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

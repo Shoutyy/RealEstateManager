@@ -1,6 +1,8 @@
 package com.example.realestatemanager.ui.property
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import com.example.realestatemanager.model.*
 import com.example.realestatemanager.repository.PropertyDataRepository
 import com.example.realestatemanager.repository.PropertyAndLocationOfInterestDataRepository
@@ -16,6 +18,11 @@ class PropertyDetailViewModel (
     fun getProperty(propertyId: Int): LiveData<PropertyDetailModelProcessed> =
         Transformations.map(propertyDataSource.getProperty(propertyId)) { buildPropertyModelProcessed(it) }
 
+    fun getLocationsOfInterest(propertyId: Int): LiveData<LocationsOfInterestModelProcessed> =
+        Transformations.map(propertyAndLocationOfInterestDataSource.getLocationsOfInterest(propertyId)) { buildLocationOfInterestModelProcessed(it) }
+
+
+    //factory
     private fun buildPropertyModelProcessed(property: Property) =
         PropertyDetailModelProcessed(
             description = property.description,
@@ -40,13 +47,13 @@ class PropertyDetailViewModel (
     private fun getCityIntoStringForUi(city: City?) =
         when(city) {
             City.NEW_YORK -> "New York"
-            else -> null
+            else -> "City unknown"
         }
 
     private fun getCountryIntoStringForUi(country: Country?) =
         when(country) {
             Country.UNITED_STATES -> "United States"
-            else -> null
+            else -> "Country unknown"
         }
 
 
@@ -61,8 +68,6 @@ class PropertyDetailViewModel (
             null
         }
 
-    fun getLocationsOfInterest(propertyId: Int): LiveData<LocationsOfInterestModelProcessed> =
-        Transformations.map(propertyAndLocationOfInterestDataSource.getLocationsOfInterest(propertyId)) { buildLocationOfInterestModelProcessed(it) }
 
     private fun buildLocationOfInterestModelProcessed(composition: List<PropertyAndLocationOfInterest>): LocationsOfInterestModelProcessed {
         var school = false
