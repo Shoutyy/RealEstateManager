@@ -3,13 +3,12 @@ package com.example.realestatemanager.ui.form
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
-import com.basgeekball.awesomevalidation.utility.RegexTemplate
 import com.example.realestatemanager.R
 import com.example.realestatemanager.di.AddFormInjection
-import com.example.realestatemanager.model.FormModelRaw
+import com.example.realestatemanager.model.AddFormModelRaw
 import kotlinx.android.synthetic.main.form.*
 
-class AddFormActivity : FormBaseActivity(), FormMediaFragment.OnListFragmentInteractionListener {
+class AddFormActivity : FormBaseActivity(){
 
     private val addFormViewModel: AddFormViewModel by lazy { ViewModelProviders.of(this, AddFormInjection.provideViewModelFactory(applicationContext)).get(AddFormViewModel::class.java) }
 
@@ -43,8 +42,8 @@ class AddFormActivity : FormBaseActivity(), FormMediaFragment.OnListFragmentInte
             && bathrooms.isNotEmpty()
             && bedrooms.isNotEmpty()
             && fullNameAgent.isNotEmpty()
-            && entryDate > 0) {
-            val formModelRaw = FormModelRaw(
+            && entryDateLong > 0) {
+            val formModelRaw = AddFormModelRaw(
                 listFormPhotoAndWording = listFormPhotoAndWording,
                 path = path,
                 complement = complement,
@@ -66,7 +65,7 @@ class AddFormActivity : FormBaseActivity(), FormMediaFragment.OnListFragmentInte
                 subways = subways,
                 train = train,
                 available = available,
-                entryDate = entryDate,
+                entryDate = entryDateLong,
                 context = applicationContext
             )
             addFormViewModel.startBuildingModelsForDatabase(formModelRaw)
@@ -81,27 +80,11 @@ class AddFormActivity : FormBaseActivity(), FormMediaFragment.OnListFragmentInte
         } else {
             form_error_photo.visibility = View.GONE
         }
-        if (entryDate <= 0) {
+        if (entryDateLong <= 0) {
             form_error_entry_date.visibility = View.VISIBLE
         } else {
             form_error_entry_date.visibility = View.GONE
         }
-    }
-
-    private fun setEveryAwesomeValidation() {
-        mAwesomeValidation.addValidation(this, R.id.form_path_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_district_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_city_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_postal_code_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_country_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_description_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_price_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_type_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_square_meters_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_rooms_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_bathrooms_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_bedrooms_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
-        mAwesomeValidation.addValidation(this, R.id.form_agent_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
     }
 
 }

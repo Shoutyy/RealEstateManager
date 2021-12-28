@@ -11,6 +11,7 @@ import androidx.room.PrimaryKey
     parentColumns = ["agent_id"], childColumns = ["agentId"])])
 
 class Property(
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
     val type: Type,
     val price: Long,
     val surface: Int,
@@ -24,7 +25,6 @@ class Property(
     val saleDate: Long?,
     val agentId: Int
 ) {
-    @PrimaryKey(autoGenerate = true) var id: Int = 0
     @Embedded var address: Address? = null
     @Embedded var agent: Agent? = null
 }

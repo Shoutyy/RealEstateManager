@@ -15,16 +15,12 @@ import com.example.realestatemanager.model.Wording
 import com.example.realestatemanager.repository.*
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.Executor
 
-class UpdateFormViewModel(
+class SetUpdateFormViewModel(
     private val propertyDataSource: PropertyDataRepository,
-    private val addressDataSource: AddressDataRepository,
     agentDataSource: AgentDataRepository,
     private val propertyAndLocationOfInterestDataSource: PropertyAndLocationOfInterestDataRepository,
-    private val propertyPhotoDataSource: PropertyPhotoDataRepository,
-    private val propertyAndPropertyPhotoDataSource: PropertyAndPropertyPhotoDataRepository,
-    private val executor: Executor) : ViewModel() {
+    private val propertyAndPropertyPhotoDataSource: PropertyAndPropertyPhotoDataRepository) : ViewModel() {
 
     private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
@@ -48,11 +44,11 @@ class UpdateFormViewModel(
     }
 
     //---FACTORY---\\
-
     private fun buildPropertyModelProcessed(property: Property)
             = UpdateFormPropertyModelProcessed(
-        type = property.type.ordinal,
+        type = Utils.getTypeIntoStringForUi(property.type),
         price = property.price.toString(),
+        surface = property.surface.toString(),
         rooms = property.rooms.toString(),
         bedrooms = property.bedrooms.toString(),
         bathrooms = property.bathrooms.toString(),
@@ -60,13 +56,14 @@ class UpdateFormViewModel(
         available = property.available,
         entryDate = getEntryDateIntoStringForUi(property.entryDate),
         saleDate = getSaleDateIntoStringForUi(property.saleDate),
+        addressId = property.addressId,
         path = property.address?.path,
-        complement = property.address?.complement,
-        district = property.address?.district?.ordinal,
-        city = property.address?.city?.ordinal,
+        complement = if (property.address?.complement != null) { property.address?.complement } else { "" },
+        district = Utils.getDistrictIntoStringForUi(property.address?.district),
+        city = Utils.getCityIntoStringForUi(property.address?.city),
         postalCode = property.address?.postalCode,
-        country = property.address?.country?.ordinal,
-        agent = property.agentId - 1
+        country = Utils.getCountryIntoStringForUi(property.address?.country),
+        fullNameAgent = Utils.getAgentIntoStringForUi(property.agentId)
     )
 
     private fun getEntryDateIntoStringForUi(entryDate: Long) = dateFormat.format(Date(entryDate))
@@ -75,9 +72,8 @@ class UpdateFormViewModel(
         if (saleDate != null) {
             dateFormat.format(Date(saleDate))
         } else {
-            null
+            ""
         }
-
 
     private fun buildLocationOfInterest(listComposition: List<PropertyAndLocationOfInterest>): UpdateFormLocationsOfInterestModelProcessed {
         var school = false

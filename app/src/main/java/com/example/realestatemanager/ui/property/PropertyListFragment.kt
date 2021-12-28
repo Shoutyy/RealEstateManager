@@ -51,7 +51,7 @@ class PropertyListFragment : Fragment() {
         })
 
     private fun getPropertyIllustration(propertyId: Int, path: String?) =
-        propertyListViewModel.getPropertyIllustration(propertyId, path, requireContext()).observe(this, Observer {
+        propertyListViewModel.getPropertyIllustration(propertyId, path, requireContext()).observe(viewLifecycleOwner, Observer {
             illustrations.add(it)
             propertyListAdapter.receiveIllustrations(illustrations)
         })

@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
+import com.basgeekball.awesomevalidation.utility.RegexTemplate
 import com.example.realestatemanager.ui.form.FormMediaFragment
 import com.example.realestatemanager.model.FormPhotoAndWording
 import com.basgeekball.awesomevalidation.AwesomeValidation
@@ -29,8 +30,7 @@ import kotlinx.android.synthetic.main.toolbar.*
 abstract class FormBaseActivity: AppCompatActivity(), IPickResult, FormMediaFragment.OnListFragmentInteractionListener {
 
     private val formMediaFragment = FormMediaFragment.newInstance()
-
-    private var calendar = Calendar.getInstance()
+    protected var calendar: Calendar = Calendar.getInstance()
     private var photo: Bitmap? = null
     private var wording: String = ""
     protected val listFormPhotoAndWording = mutableListOf<FormPhotoAndWording>()
@@ -56,7 +56,10 @@ abstract class FormBaseActivity: AppCompatActivity(), IPickResult, FormMediaFrag
     protected var subways: Boolean = false
     protected var train: Boolean = false
     protected var available: Boolean = true
-    protected var entryDate: Long = 0
+    protected var entryDate: String = ""
+    protected var entryDateLong: Long = 0
+    protected var saleDate: String = ""
+    protected var saleDateLong: Long = 0
 
     protected abstract fun getAgentsNameForDropDownMenu()
     protected abstract fun shareModelToTheViewModel()
@@ -129,7 +132,7 @@ abstract class FormBaseActivity: AppCompatActivity(), IPickResult, FormMediaFrag
         form_bathrooms_edit_text.doAfterTextChanged { bathrooms = it.toString() }
         form_bedrooms_edit_text.doAfterTextChanged { bedrooms = it.toString() }
         form_full_name_agent.doAfterTextChanged { fullNameAgent = it.toString() }
-        form_select_entry_date.setOnClickListener { initBeginDatePickerDialog() }
+        form_select_entry_date.setOnClickListener { initEntryDatePickerDialog() }
         form_cancel_button.setOnClickListener { finish() }
         form_add_button.setOnClickListener {
             shareModelToTheViewModel()
@@ -176,7 +179,7 @@ abstract class FormBaseActivity: AppCompatActivity(), IPickResult, FormMediaFrag
         wording = ""
     }
 
-    private fun initBeginDatePickerDialog() {
+    private fun initEntryDatePickerDialog() {
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
@@ -192,9 +195,9 @@ abstract class FormBaseActivity: AppCompatActivity(), IPickResult, FormMediaFrag
     private var entryDateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
         calendar.set(year, month, dayOfMonth)
         val visualFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val entryDateToShow = visualFormat.format(calendar.time)
-        form_select_entry_date.text = entryDateToShow
-        entryDate = calendar.timeInMillis
+        entryDate = visualFormat.format(calendar.time)
+        form_select_entry_date.text = entryDate
+        entryDateLong = calendar.timeInMillis
     }
 
     fun onCheckboxClicked(view: View) {
@@ -225,6 +228,22 @@ abstract class FormBaseActivity: AppCompatActivity(), IPickResult, FormMediaFrag
             }
             .setNegativeButton("No", null)
             .show()
+    }
+
+    protected fun setEveryAwesomeValidation() {
+        mAwesomeValidation.addValidation(this, R.id.form_path_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
+        mAwesomeValidation.addValidation(this, R.id.form_district_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
+        mAwesomeValidation.addValidation(this, R.id.form_city_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
+        mAwesomeValidation.addValidation(this, R.id.form_postal_code_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
+        mAwesomeValidation.addValidation(this, R.id.form_country_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
+        mAwesomeValidation.addValidation(this, R.id.form_description_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
+        mAwesomeValidation.addValidation(this, R.id.form_price_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
+        mAwesomeValidation.addValidation(this, R.id.form_type_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
+        mAwesomeValidation.addValidation(this, R.id.form_square_meters_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
+        mAwesomeValidation.addValidation(this, R.id.form_rooms_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
+        mAwesomeValidation.addValidation(this, R.id.form_bathrooms_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
+        mAwesomeValidation.addValidation(this, R.id.form_bedrooms_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
+        mAwesomeValidation.addValidation(this, R.id.form_agent_layout, RegexTemplate.NOT_EMPTY, R.string.form_error_field_empty)
     }
 
 }

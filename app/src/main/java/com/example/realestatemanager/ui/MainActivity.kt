@@ -19,6 +19,7 @@ import com.example.realestatemanager.ui.property.PropertyDetailActivity
 import com.example.realestatemanager.ui.property.PropertyDetailFragment
 import com.example.realestatemanager.ui.property.PropertyListFragment
 import com.example.realestatemanager.ui.emptyPropertyDetail.EmptyPropertyDetailFragment
+import com.example.realestatemanager.ui.form.AddFormActivity
 import com.example.realestatemanager.ui.form.UpdateFormActivity
 
 const val INTENT_MAIN_TO_DETAIL = "INTENT_MAIN_TO_DETAIL"
@@ -61,7 +62,7 @@ class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInt
                 true
             }
             R.id.add_button -> {
-                val intent = Intent(this, FormBaseActivity::class.java)
+                val intent = Intent(this, AddFormActivity::class.java)
                 intent.putExtra(INTENT_MAIN_TO_UPDATE, propertyId)
                 startActivity(intent)
                 true

@@ -3,10 +3,6 @@ package com.example.realestatemanager.ui.form
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.res.TypedArrayUtils.getString
-import com.example.realestatemanager.R
 import com.example.realestatemanager.model.*
 import com.example.realestatemanager.util.Utils
 import com.example.realestatemanager.repository.*
@@ -24,12 +20,12 @@ class AddFormViewModel (
     private var _fullNameAgents: LiveData<List<String>> = Transformations.map(agentDataSource.getAgents()) { list -> list.map { agent -> agent.firstName + " " + agent.name } }
     val fullNameAgents: LiveData<List<String>> = _fullNameAgents
 
-    fun startBuildingModelsForDatabase(formModelRaw: FormModelRaw) = buildAddressModel(formModelRaw)
+    fun startBuildingModelsForDatabase(addFormModelRaw: AddFormModelRaw) = buildAddressModel(addFormModelRaw)
 
 
-    private fun buildAddressModel(formModelRaw: FormModelRaw) {
+    private fun buildAddressModel(addFormModelRaw: AddFormModelRaw) {
         val address: Address
-        with(formModelRaw) {
+        with(addFormModelRaw) {
             address = Address(
                 path = path,
                 complement = returnComplementOrNull(complement),
@@ -39,18 +35,18 @@ class AddFormViewModel (
                 country = getCountryForDatabase(country)
             )
         }
-        insertAddress(formModelRaw, address)
+        insertAddress(addFormModelRaw, address)
     }
 
-    private fun insertAddress(formModelRaw: FormModelRaw, address: Address) =
+    private fun insertAddress(addFormModelRaw: AddFormModelRaw, address: Address) =
         executor.execute {
             val rowIdAddress = addressDataSource.insertAddress(address)
-            buildPropertyModel(formModelRaw, rowIdAddress)
+            buildPropertyModel(addFormModelRaw, rowIdAddress)
     }
 
-    private fun buildPropertyModel(formModelRaw: FormModelRaw, rowIdAddress: Long) {
+    private fun buildPropertyModel(addFormModelRaw: AddFormModelRaw, rowIdAddress: Long) {
         val property: Property
-        with(formModelRaw) {
+        with(addFormModelRaw) {
             property = Property(
                 type = getTypeForDatabase(type),
                 price = price.toLong(),
@@ -66,18 +62,18 @@ class AddFormViewModel (
                 agentId = getAgentIdForDatabase(fullNameAgent)
             )
         }
-        insertProperty(formModelRaw, property)
+        insertProperty(addFormModelRaw, property)
     }
 
-    private fun insertProperty(formModelRaw: FormModelRaw, property: Property) =
+    private fun insertProperty(addFormModelRaw: AddFormModelRaw, property: Property) =
         executor.execute {
             val rowIdProperty = propertyDataSource.insertProperty(property)
-            buildPropertyAndLocationOfInterestDataSource(formModelRaw, rowIdProperty)
-            buildPropertyPhotoAndSavePhotosOnInternalStorage(formModelRaw, rowIdProperty)
+            buildPropertyAndLocationOfInterestDataSource(addFormModelRaw, rowIdProperty)
+            buildPropertyPhotoAndSavePhotosOnInternalStorage(addFormModelRaw, rowIdProperty)
     }
 
-    private fun buildPropertyAndLocationOfInterestDataSource(formModelRaw: FormModelRaw, rowIdProperty: Long) {
-        with(formModelRaw) {
+    private fun buildPropertyAndLocationOfInterestDataSource(addFormModelRaw: AddFormModelRaw, rowIdProperty: Long) {
+        with(addFormModelRaw) {
             if (school){
                 val propertyAndLocationOfInterest = PropertyAndLocationOfInterest(
                     propertyId = rowIdProperty.toInt(),
@@ -121,8 +117,8 @@ class AddFormViewModel (
             propertyAndLocationOfInterestDataSource.insertLocationOfInterest(propertyAndLocationOfInterest)
         }
 
-    private fun buildPropertyPhotoAndSavePhotosOnInternalStorage(formModelRaw: FormModelRaw, rowIdProperty: Long) {
-        with(formModelRaw) {
+    private fun buildPropertyPhotoAndSavePhotosOnInternalStorage(addFormModelRaw: AddFormModelRaw, rowIdProperty: Long) {
+        with(addFormModelRaw) {
             listFormPhotoAndWording.forEachIndexed {index, formPhotoAndWording ->
                 val name = getNamePhoto(index)
                 Utils.setInternalBitmap(formPhotoAndWording.photo, path, name, context)
@@ -134,7 +130,7 @@ class AddFormViewModel (
                 insertPropertyPhoto(propertyPhoto, rowIdProperty)
             }
         }
-        sendNotification(formModelRaw)
+        sendNotification(addFormModelRaw)
     }
 
     private fun insertPropertyPhoto(propertyPhoto: PropertyPhoto, rowIdProperty: Long) =
@@ -157,14 +153,14 @@ class AddFormViewModel (
             propertyAndPropertyPhotoDataSource.insertPropertyPhoto(propertyAndPropertyPhoto)
         }
 
-    private fun sendNotification(formModelRaw: FormModelRaw) {
+    private fun sendNotification(addFormModelRaw: AddFormModelRaw) {
         /*
-        val builder = NotificationCompat.Builder(formModelRaw.context, channelId)
+        val builder = NotificationCompat.Builder(addFormModelRaw.context, channelId)
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentTitle("RealEstateManager")
                 .setContentText("Your property as been add.")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        NotificationManagerCompat.from(formModelRaw.context).notify(0, builder.build())*/
+        NotificationManagerCompat.from(addFormModelRaw.context).notify(0, builder.build())*/
     }
 
     //---FACTORY---\\
@@ -207,14 +203,14 @@ class AddFormViewModel (
 
     private fun getAgentIdForDatabase(fullNameAgent: String) =
         when(fullNameAgent) {
-            "Tony Stark" -> 1
-            "Peter Parker" -> 2
-            "Steve Rogers" -> 3
-            "Natasha Romanoff" -> 4
-            "Bruce Banner" -> 5
-            "Clinton Barton" -> 6
-            "Carol Denvers" -> 7
-            "Wanda Maximoff" -> 8
+            "Harmonie Nee"-> 1
+            "Clelie Lafaille" -> 2
+            "Elisa Beauvau" -> 3
+            "Josette Boutroux" -> 4
+            "Albert Lafaille" -> 5
+            "Omer Delaplace" -> 6
+            "Robert Courtial" -> 7
+            "Christopher Gaudreau" -> 8
             else -> 1
         }
 

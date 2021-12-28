@@ -3,7 +3,7 @@ package com.example.realestatemanager.model
 import android.content.Context
 import com.example.realestatemanager.model.FormPhotoAndWording
 
-class FormModelRaw(
+class AddFormModelRaw(
     val listFormPhotoAndWording: MutableList<FormPhotoAndWording>,
     val path: String,
     val complement: String,

@@ -1,6 +1,7 @@
 package com.example.realestatemanager.model
 
-class UpdateFormPropertyModelProcessed (
+class PropertyModelRaw (
+    val id: Int,
     val type: String,
     val price: String,
     val surface: String,
@@ -9,15 +10,8 @@ class UpdateFormPropertyModelProcessed (
     val bathrooms: String,
     val description: String,
     val available: Boolean,
-    val entryDate: String,
-    val saleDate: String,
+    val entryDate: Long,
+    val saleDate: Long,
     val addressId: Int,
-    val path: String?,
-    val complement: String?,
-    val district: String,
-    val city: String,
-    val postalCode: String?,
-    val country: String,
     val fullNameAgent: String
 )
-

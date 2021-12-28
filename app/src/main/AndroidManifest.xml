@@ -30,7 +30,7 @@
             android:parentActivityName=".ui.MainActivity">
         </activity>
         <activity
-            android:name=".ui.form.FormBaseActivity"
+            android:name=".ui.form.AddFormActivity"
             android:label="Add property"
             android:parentActivityName=".ui.MainActivity">
         </activity>

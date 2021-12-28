@@ -12,6 +12,6 @@ class PropertyAndLocationOfInterestDataRepository(private val propertyAndLocatio
 
     fun updateLocationOfInterest(propertyAndLocationOfInterest: PropertyAndLocationOfInterest) = propertyAndLocationOfInterestDao.updateLocationOfInterest(propertyAndLocationOfInterest)
 
-    fun deleteLocationOfInterest(propertyId: Int) = propertyAndLocationOfInterestDao.deleteLocationOfInterest(propertyId)
+    fun deleteLocationOfInterest(propertyId: Int, locationOfInterestId: Int) = propertyAndLocationOfInterestDao.deleteLocationOfInterest(propertyId, locationOfInterestId)
 
 }

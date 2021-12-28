@@ -19,7 +19,7 @@ interface PropertyAndLocationOfInterestDao {
     @Update
     fun updateLocationOfInterest(propertyAndLocationOfInterest: PropertyAndLocationOfInterest)
 
-    @Query("DELETE FROM PropertyAndLocationOfInterest WHERE :id == propertyId")
-    fun deleteLocationOfInterest(id: Int)
+    @Query("DELETE FROM PropertyAndLocationOfInterest WHERE :propertyId == propertyId AND :locationOfInterestId == locationOfInterestId")
+    fun deleteLocationOfInterest(propertyId: Int, locationOfInterestId: Int)
 
 }

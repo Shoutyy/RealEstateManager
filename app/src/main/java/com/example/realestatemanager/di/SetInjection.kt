@@ -7,7 +7,7 @@ import com.example.realestatemanager.repository.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
-class UpdateFormInjection {
+class SetInjection {
 
     companion object {
 
@@ -45,7 +45,7 @@ class UpdateFormInjection {
             return Executors.newSingleThreadExecutor()
         }
 
-        fun provideViewModelFactory(context: Context): UpdateFormViewModelFactory {
+        fun provideViewModelFactory(context: Context): SetViewModelFactory {
             val dataSourceProperty = providePropertyDataSource(context)
             val dataSourceAddress = provideAddressDataSource(context)
             val dataSourceAgent = provideAgentDataSource(context)
@@ -53,7 +53,7 @@ class UpdateFormInjection {
             val dataSourcePropertyPhoto = providePropertyPhotoDataSource(context)
             val dataSourceCompositionPropertyAndPropertyPhoto = providePropertyAndPropertyPhoto(context)
             val executor = provideExecutor()
-            return UpdateFormViewModelFactory(dataSourceProperty,
+            return SetViewModelFactory(dataSourceProperty,
                 dataSourceAddress,
                 dataSourceAgent,
                 dataSourceCompositionPropertyAndLocationOfInterest,
