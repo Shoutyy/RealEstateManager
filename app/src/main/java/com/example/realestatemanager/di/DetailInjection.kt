@@ -2,11 +2,8 @@ package com.example.realestatemanager.di
 
 import android.content.Context
 import com.example.realestatemanager.model.PropertyAndLocationOfInterest
-import com.example.realestatemanager.repository.PropertyAndLocationOfInterestDataRepository
+import com.example.realestatemanager.repository.*
 import com.example.realestatemanager.database.AppDatabase
-import com.example.realestatemanager.repository.AddressDataRepository
-import com.example.realestatemanager.repository.AgentDataRepository
-import com.example.realestatemanager.repository.PropertyDataRepository
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -19,6 +16,11 @@ class DetailInjection {
             return PropertyDataRepository(database.propertyDao())
         }
 
+        private fun providePropertyAndPropertyPhotoDataSource(context: Context): PropertyAndPropertyPhotoDataRepository {
+            val database = AppDatabase.getInstance(context)
+            return PropertyAndPropertyPhotoDataRepository(database.propertyAndPropertyPhotoDao())
+        }
+
         private fun providePropertyAndLocationOfInterestDataSource(context: Context): PropertyAndLocationOfInterestDataRepository {
             val database = AppDatabase.getInstance(context)
             return PropertyAndLocationOfInterestDataRepository(database.propertyAndLocationOfInterestDao())
@@ -26,8 +28,9 @@ class DetailInjection {
 
         fun provideViewModelFactory(context: Context): DetailViewModelFactory {
             val dataSourceProperty = providePropertyDataSource(context)
+            val dataSourcePropertyAndPropertyPhoto = providePropertyAndPropertyPhotoDataSource(context)
             val dateSourcePropertyAndLocationOfInterest = providePropertyAndLocationOfInterestDataSource(context)
-            return DetailViewModelFactory(dataSourceProperty, dateSourcePropertyAndLocationOfInterest)
+            return DetailViewModelFactory(dataSourceProperty, dataSourcePropertyAndPropertyPhoto, dateSourcePropertyAndLocationOfInterest)
         }
 
     }

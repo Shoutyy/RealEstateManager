@@ -28,6 +28,7 @@ class PropertyDetailFragment : Fragment() {
     }
 
     private var propertyId: Int = 0
+    private var mediaFragment = MediaFragment.newInstance()
     private val propertyDetailViewModel: PropertyDetailViewModel by lazy { ViewModelProviders.of(this, DetailInjection.provideViewModelFactory(requireContext())).get(PropertyDetailViewModel::class.java)}
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,9 +52,17 @@ class PropertyDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        propertyDetailViewModel.getProperty(propertyId).observe(viewLifecycleOwner, Observer { updateUiWithPropertyData(it) })
-        propertyDetailViewModel.getLocationsOfInterest(propertyId).observe(viewLifecycleOwner, Observer { updateUiWithLocationsOfInterestData(it) })
         addMediaFragment()
+        propertyDetailViewModel.getProperty(propertyId).observe(viewLifecycleOwner, Observer {
+            updateUiWithPropertyData(it)
+            propertyDetailViewModel.getPropertyPhotos(propertyId, it.path, requireContext()).observe(this, Observer {propertyPhotos -> mediaFragment.receivePropertyPhotos(propertyPhotos) })
+        })
+        propertyDetailViewModel.getLocationsOfInterest(propertyId).observe(viewLifecycleOwner, Observer { updateUiWithLocationsOfInterestData(it) })
+    }
+
+    private fun addMediaFragment() {
+        val fragmentTransaction = fragmentManager?.beginTransaction()
+        fragmentTransaction?.add(R.id.property_detail_media_container, mediaFragment)?.commit()
     }
 
     private fun updateUiWithPropertyData(model: PropertyDetailModelProcessed) {
@@ -80,7 +89,7 @@ class PropertyDetailFragment : Fragment() {
             property_detail_country.text = country
             property_detail_agent.text = agentFullName
             property_detail_entry_date.text = entryDate
-            if (saleDate != null) {
+            if (saleDate.isNotEmpty()) {
                 property_detail_sale_date.text = saleDate
             } else {
                 property_detail_sale_date_layout.visibility = View.GONE
@@ -119,12 +128,5 @@ class PropertyDetailFragment : Fragment() {
                 property_detail_empty_location_of_interest.visibility = View.VISIBLE
             }
         }
-    }
-
-    private fun addMediaFragment() {
-        val mediaFragment = MediaFragment.newInstance(propertyId)
-        val fragmentTransaction = fragmentManager?.beginTransaction()
-        //activity.supportFragmentManager
-        fragmentTransaction?.add(R.id.property_detail_media_container, mediaFragment)?.commit()
     }
 }

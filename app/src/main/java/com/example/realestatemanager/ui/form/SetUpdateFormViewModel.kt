@@ -11,7 +11,6 @@ import com.example.realestatemanager.model.UpdateFormPropertyModelProcessed
 import com.example.realestatemanager.model.PropertyAndLocationOfInterest
 import com.example.realestatemanager.model.PropertyAndPropertyPhoto
 import com.example.realestatemanager.model.Property
-import com.example.realestatemanager.model.Wording
 import com.example.realestatemanager.repository.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,7 +45,7 @@ class SetUpdateFormViewModel(
     //---FACTORY---\\
     private fun buildPropertyModelProcessed(property: Property)
             = UpdateFormPropertyModelProcessed(
-        type = Utils.getTypeIntoStringForUi(property.type),
+        type = Utils.fromTypeToString(property.type),
         price = property.price.toString(),
         surface = property.surface.toString(),
         rooms = property.rooms.toString(),
@@ -54,16 +53,16 @@ class SetUpdateFormViewModel(
         bathrooms = property.bathrooms.toString(),
         description = property.description,
         available = property.available,
-        entryDate = getEntryDateIntoStringForUi(property.entryDate),
-        saleDate = getSaleDateIntoStringForUi(property.saleDate),
+        entryDate = Utils.fromEntryDateToString(property.entryDate),
+        saleDate = Utils.fromSaleDateToString(property.saleDate),
         addressId = property.addressId,
         path = property.address?.path,
         complement = if (property.address?.complement != null) { property.address?.complement } else { "" },
-        district = Utils.getDistrictIntoStringForUi(property.address?.district),
-        city = Utils.getCityIntoStringForUi(property.address?.city),
+        district = Utils.fromDistrictToString(property.address?.district),
+        city = Utils.fromCityToString(property.address?.city),
         postalCode = property.address?.postalCode,
-        country = Utils.getCountryIntoStringForUi(property.address?.country),
-        fullNameAgent = Utils.getAgentIntoStringForUi(property.agentId)
+        country = Utils.fromCountryToString(property.address?.country),
+        fullNameAgent = Utils.fromAgentIdToString(property.agentId)
     )
 
     private fun getEntryDateIntoStringForUi(entryDate: Long) = dateFormat.format(Date(entryDate))
@@ -102,36 +101,6 @@ class SetUpdateFormViewModel(
     private fun buildFormPhotoAndWording(composition: PropertyAndPropertyPhoto, path: String?, context: Context) =
         FormPhotoAndWording(
             photo = Utils.getInternalBitmap(path, composition.propertyPhoto?.name, context),
-            wording = getWordingIntoStringForUi(composition.propertyPhoto?.wording)
+            wording = Utils.fromWordingToString(composition.propertyPhoto?.wording)
         )
-
-    private fun getWordingIntoStringForUi(wording: Wording?) =
-        when(wording) {
-            Wording.STREET_VIEW -> "Street view"
-            Wording.LIVING_ROOM -> "Living room"
-            Wording.HALL -> "Hall"
-            Wording.KITCHEN -> "Kitchen"
-            Wording.DINING_ROOM -> "Dining room"
-            Wording.BATHROOM -> "Bathroom"
-            Wording.BALCONY -> "Balcony"
-            Wording.BEDROOM -> "Bedroom"
-            Wording.TERRACE -> "Terrace"
-            Wording.WALK_IN_CLOSET -> "Walk in closet"
-            Wording.OFFICE -> "Office"
-            Wording.ROOF_TOP -> "Roof top"
-            Wording.PLAN -> "plan"
-            Wording.HALLWAY -> "Hallway"
-            Wording.VIEW -> "View"
-            Wording.GARAGE -> "Garage"
-            Wording.SWIMMING_POOL -> "Swimming pool"
-            Wording.FITNESS_CENTRE -> "Fitness centre"
-            Wording.SPA -> "Spa"
-            Wording.CINEMA -> "Cinema"
-            Wording.CONFERENCE -> "Conference"
-            Wording.STAIRS -> "Stairs"
-            Wording.GARDEN -> "Garden"
-            Wording.FLOOR -> "Floor"
-            else -> "Unknown wording"
-        }
-
 }

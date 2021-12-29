@@ -9,35 +9,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.realestatemanager.R
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import com.example.realestatemanager.di.MediaInjection
-
-const val ARG_MEDIA_PROPERTY_ID = "ARG_MEDIA_PROPERTY_ID"
+import com.example.realestatemanager.model.PhotoModelProcessed
 
 class MediaFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(propertyId: Int) =
-            MediaFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_MEDIA_PROPERTY_ID, propertyId)
-                }
-            }
+        fun newInstance() =
+            MediaFragment().apply { }
     }
 
-    private var propertyId: Int = 0
-    private val mediaViewModel: MediaViewModel by lazy { ViewModelProviders.of(this, MediaInjection.provideViewModelFactory(requireContext())).get(MediaViewModel::class.java) }
     private val mediaAdapter: MediaRecyclerViewAdapter = MediaRecyclerViewAdapter()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        arguments?.let {
-            propertyId = it.getInt(ARG_MEDIA_PROPERTY_ID)
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -49,11 +31,8 @@ class MediaFragment : Fragment() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = mediaAdapter
         }
-        getPropertyPath()
         return view
     }
 
-    private fun getPropertyPath() = mediaViewModel.getPropertyPath(propertyId).observe(viewLifecycleOwner, Observer { getPropertyPhotos(it) })
-    private fun getPropertyPhotos(path: String) = mediaViewModel.getPropertyPhotos(propertyId, path, requireContext()).observe(this, Observer { mediaAdapter.receivePropertyPhotos(it) })
-
+    fun receivePropertyPhotos(propertyPhotos: List<PhotoModelProcessed>) = mediaAdapter.receivePropertyPhotos(propertyPhotos)
 }

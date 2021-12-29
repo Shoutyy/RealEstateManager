@@ -2,10 +2,6 @@ package com.example.realestatemanager.util
 
 import android.content.Context
 import android.util.Log
-import com.example.realestatemanager.model.City
-import com.example.realestatemanager.model.Country
-import com.example.realestatemanager.model.District
-import com.example.realestatemanager.model.Type
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -16,6 +12,8 @@ import java.io.FileOutputStream
 import java.io.IOException
 import android.net.ConnectivityManager
 import com.example.realestatemanager.R
+import com.example.realestatemanager.model.*
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.*
@@ -27,6 +25,8 @@ import kotlin.math.roundToLong
  */
 
 object Utils {
+
+    private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     /**
      * Conversion de la date d'aujourd'hui en un format plus approprié
@@ -115,7 +115,7 @@ object Utils {
     //---TO-DATABASE---\\
     fun returnComplementOrNull(complement: String) = if (complement.isNotEmpty()) { complement } else { null }
 
-    fun getDistrictForDatabaseFromString(district: String) =
+    fun fromStringToDistrict(district: String) =
         when(district) {
             "Bronx" -> District.BRONX
             "Brooklyn" -> District.BROOKLYN
@@ -125,19 +125,19 @@ object Utils {
             else -> District.BRONX
         }
 
-    fun getCityForDatabaseFromString(city: String) =
+    fun fromStringToCity(city: String) =
         when(city) {
             "New York" -> City.NEW_YORK
             else -> City.NEW_YORK
         }
 
-    fun getCountryForDatabaseFromString(country: String) =
+    fun fromStringToCountry(country: String) =
         when(country) {
             "United States" -> Country.UNITED_STATES
             else -> Country.UNITED_STATES
         }
 
-    fun getTypeForDatabaseFromString(type: String) =
+    fun fromStringToType(type: String) =
         when(type) {
             "Flat" -> Type.FLAT
             "Penthouse" -> Type.PENTHOUSE
@@ -150,7 +150,7 @@ object Utils {
             else -> Type.FLAT
         }
 
-    fun getAgentIdForDatabaseFromString(fullNameAgent: String) =
+    fun fromStringToAgent(fullNameAgent: String) =
         when(fullNameAgent) {
             "Harmonie Nee" -> 1
             "Clelie Lafaille" -> 2
@@ -163,9 +163,38 @@ object Utils {
             else -> 1
         }
 
+    fun fromWordingToString(wording: Wording?) =
+        when(wording) {
+            Wording.STREET_VIEW -> "Street view"
+            Wording.LIVING_ROOM -> "Living room"
+            Wording.HALL -> "Hall"
+            Wording.KITCHEN -> "Kitchen"
+            Wording.DINING_ROOM -> "Dining room"
+            Wording.BATHROOM -> "Bathroom"
+            Wording.BALCONY -> "Balcony"
+            Wording.BEDROOM -> "Bedroom"
+            Wording.TERRACE -> "Terrace"
+            Wording.WALK_IN_CLOSET -> "Walk in closet"
+            Wording.OFFICE -> "Office"
+            Wording.ROOF_TOP -> "Roof top"
+            Wording.PLAN -> "plan"
+            Wording.HALLWAY -> "Hallway"
+            Wording.VIEW -> "View"
+            Wording.GARAGE -> "Garage"
+            Wording.SWIMMING_POOL -> "Swimming pool"
+            Wording.FITNESS_CENTRE -> "Fitness centre"
+            Wording.SPA -> "Spa"
+            Wording.CINEMA -> "Cinema"
+            Wording.CONFERENCE -> "Conference"
+            Wording.STAIRS -> "Stairs"
+            Wording.GARDEN -> "Garden"
+            Wording.FLOOR -> "Floor"
+            else -> "Unknown wording"
+        }
+
     //---TO-UI---\\
 
-    fun getTypeIntoStringForUi(type: Type) =
+    fun fromTypeToString(type: Type) =
         when(type) {
             Type.PENTHOUSE -> "Penthouse"
             Type.MANSION -> "Mansion"
@@ -177,7 +206,7 @@ object Utils {
             Type.CONDO -> "Condo"
         }
 
-    fun getDistrictIntoStringForUi(district: District?) =
+    fun fromDistrictToString(district: District?) =
         when(district) {
             District.MANHATTAN -> "Manhattan"
             District.BROOKLYN -> "Brooklyn"
@@ -187,19 +216,19 @@ object Utils {
             else -> "District unknown"
         }
 
-    fun getCityIntoStringForUi(city: City?) =
+    fun fromCityToString(city: City?) =
         when(city) {
             City.NEW_YORK -> "New York"
             else -> "City unknown"
         }
 
-    fun getCountryIntoStringForUi(country: Country?) =
+    fun fromCountryToString(country: Country?) =
         when(country) {
             Country.UNITED_STATES -> "United States"
             else -> "Country unknown"
         }
 
-    fun getAgentIntoStringForUi(agentId: Int) =
+    fun fromAgentIdToString(agentId: Int) =
         when(agentId) {
             1 -> "Harmonie Nee"
             2 -> "Clelie Lafaille"
@@ -211,4 +240,50 @@ object Utils {
             8 -> "Christopher Gaudreau"
             else -> "Agent unknown"
         }
+
+    fun fromPriceToString(price: Long) = "$" + NumberFormat.getIntegerInstance().format(price)
+
+    fun fromSurfaceToString(surface: Int?) = surface.toString() + "sq ft"
+
+    fun fromAgentToString(firstName: String?, name: String?) = "$firstName $name"
+
+    fun fromEntryDateToString(entryDate: Long) = dateFormat.format(Date(entryDate))
+
+    fun fromSaleDateToString(saleDate: Long?) =
+        if (saleDate != null) {
+            dateFormat.format(Date(saleDate))
+        } else {
+            ""
+        }
+
+    fun fromStringToWording(wording: String?) =
+        when(wording) {
+            "Street View" -> Wording.STREET_VIEW
+            "Living room" -> Wording.LIVING_ROOM
+            "Hall" -> Wording.HALL
+            "Kitchen" -> Wording.KITCHEN
+            "Dining room" -> Wording.DINING_ROOM
+            "Bathroom" -> Wording.BATHROOM
+            "Balcony" -> Wording.BALCONY
+            "Bedroom" -> Wording.BEDROOM
+            "Terrace" -> Wording.TERRACE
+            "Walk in closet" -> Wording.WALK_IN_CLOSET
+            "Office" -> Wording.OFFICE
+            "Roof top" -> Wording.ROOF_TOP
+            "plan" -> Wording.PLAN
+            "Hallway" -> Wording.HALLWAY
+            "View" -> Wording.VIEW
+            "Garage" -> Wording.GARAGE
+            "Swimming pool" -> Wording.SWIMMING_POOL
+            "Fitness centre" -> Wording.FITNESS_CENTRE
+            "Spa" -> Wording.SPA
+            "Cinema" -> Wording.CINEMA
+            "Conference" -> Wording.CONFERENCE
+            "Stairs" -> Wording.STAIRS
+            "Garden" -> Wording.GARDEN
+            "Floor" -> Wording.FLOOR
+            else -> Wording.STREET_VIEW
+        }
+
+    fun createNamePhoto(index: Int) = "$index.png"
 }
