@@ -71,6 +71,7 @@ class UpdateFormActivity: FormBaseActivity() {
     private fun retrievesDataFromDatabase() {
         setUpdateFormViewModel.getProperty(propertyId).observeOnce(this, Observer { filledFormWithPropertyData(it) })
         setUpdateFormViewModel.getLocationsOfInterest(propertyId).observeOnce(this, Observer { filledFormWithLocationsOfInterestData(it) })
+        setUpdateFormViewModel.getPropertyPhotos(propertyId, applicationContext).observe(this, Observer { filledFormWithPropertyPhotos(it) })
     }
 
     private fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
@@ -103,21 +104,23 @@ class UpdateFormActivity: FormBaseActivity() {
             form_select_entry_date.text = entryDate
             form_is_available_switch.visibility = View.VISIBLE
             this@UpdateFormActivity.available = available
+            form_is_available_switch.isChecked = available
             form_is_available_switch.setOnCheckedChangeListener { _, isChecked ->
                 this@UpdateFormActivity.available = isChecked
                 if (!isChecked) {
                     form_sale_date_layout.visibility = View.VISIBLE
+                    form_select_sale_date.setOnClickListener { initSaleDatePickerDialog() }
                 } else {
                     form_sale_date_layout.visibility = View.GONE
                 }
             }
             if (!form_is_available_switch.isChecked) {
                 form_sale_date_layout.visibility = View.VISIBLE
+                form_select_sale_date.setOnClickListener { initSaleDatePickerDialog() }
                 form_select_sale_date.text = saleDate
                 this@UpdateFormActivity.saleDate = saleDate
                 form_select_sale_date.setOnClickListener { initSaleDatePickerDialog() }
             }
-            setUpdateFormViewModel.getPropertyPhotos(propertyId, path , applicationContext).observe(this@UpdateFormActivity, Observer { filledFormWithPropertyPhotos(it) })
         }
     }
 
@@ -138,7 +141,7 @@ class UpdateFormActivity: FormBaseActivity() {
         calendar.set(year, month, dayOfMonth)
         val visualFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         saleDate = visualFormat.format(calendar.time)
-        form_select_entry_date.text = saleDate
+        form_select_sale_date.text = saleDate
         saleDateLong = calendar.timeInMillis
     }
 
@@ -205,7 +208,6 @@ class UpdateFormActivity: FormBaseActivity() {
             || description != entryPropertyModelProcessed.description
             || available != entryPropertyModelProcessed.available
             || entryDate != entryPropertyModelProcessed.entryDate
-            || saleDate != entryPropertyModelProcessed.saleDate
             || fullNameAgent != entryPropertyModelProcessed.fullNameAgent) {
             getUpdateFormViewModel.updateProperty(getNewProperty())
         }

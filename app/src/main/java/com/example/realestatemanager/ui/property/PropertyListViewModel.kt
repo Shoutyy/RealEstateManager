@@ -15,8 +15,8 @@ class PropertyListViewModel (
     private var _properties: LiveData<List<PropertyModelProcessed>> = Transformations.map(propertyDataSource.getProperties()) { it.map { property -> buildPropertyModelProcessed(property) } }
     val properties: LiveData<List<PropertyModelProcessed>> = _properties
 
-    fun getPropertyIllustration(propertyId: Int, path: String?, context: Context): LiveData<IllustrationModelProcessed> =
-        Transformations.map(propertyAndPropertyPhotoDataRepository.getPropertyIllustration(propertyId, true)) { getIllustrationModelProcessed(it, path, context) }
+    fun getPropertyIllustration(propertyId: Int, context: Context): LiveData<IllustrationModelProcessed> =
+        Transformations.map(propertyAndPropertyPhotoDataRepository.getPropertyIllustration(propertyId, true)) { getIllustrationModelProcessed(it, context) }
 
     //factory
     private fun buildPropertyModelProcessed(property: Property) =
@@ -28,9 +28,9 @@ class PropertyListViewModel (
             price = Utils.fromPriceToString(property.price)
         )
 
-    private fun getIllustrationModelProcessed(composition: PropertyAndPropertyPhoto, path: String?, context: Context) =
+    private fun getIllustrationModelProcessed(composition: PropertyAndPropertyPhoto, context: Context) =
         IllustrationModelProcessed(
             propertyId = composition.propertyId,
-            illustration = Utils.getInternalBitmap(path, composition.propertyPhoto?.name, context)
+            illustration = Utils.getInternalBitmap(composition.propertyId.toString(), composition.propertyPhoto?.name, context)
         )
 }

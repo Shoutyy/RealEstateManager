@@ -21,8 +21,6 @@ class SetUpdateFormViewModel(
     private val propertyAndLocationOfInterestDataSource: PropertyAndLocationOfInterestDataRepository,
     private val propertyAndPropertyPhotoDataSource: PropertyAndPropertyPhotoDataRepository) : ViewModel() {
 
-    private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-
     private var _fullNameAgents: LiveData<List<String>> = Transformations.map(agentDataSource.getAgents()) { list -> list.map { agent -> agent.firstName + " " + agent.name } }
     val fullNameAgents: LiveData<List<String>> = _fullNameAgents
 
@@ -34,10 +32,10 @@ class SetUpdateFormViewModel(
         return Transformations.map(propertyAndLocationOfInterestDataSource.getLocationsOfInterest(propertyId)) { buildLocationOfInterest(it) }
     }
 
-    fun getPropertyPhotos(propertyId: Int, path: String?, context: Context): LiveData<List<FormPhotoAndWording>> {
+    fun getPropertyPhotos(propertyId: Int, context: Context): LiveData<List<FormPhotoAndWording>> {
         return Transformations.map(propertyAndPropertyPhotoDataSource.getPropertyPhotos(propertyId)) {
             it.map {
-                    composition -> buildFormPhotoAndWording(composition, path, context)
+                    composition -> buildFormPhotoAndWording(composition, context)
             }
         }
     }
@@ -65,15 +63,6 @@ class SetUpdateFormViewModel(
         fullNameAgent = Utils.fromAgentIdToString(property.agentId)
     )
 
-    private fun getEntryDateIntoStringForUi(entryDate: Long) = dateFormat.format(Date(entryDate))
-
-    private fun getSaleDateIntoStringForUi(saleDate: Long?) =
-        if (saleDate != null) {
-            dateFormat.format(Date(saleDate))
-        } else {
-            ""
-        }
-
     private fun buildLocationOfInterest(listComposition: List<PropertyAndLocationOfInterest>): UpdateFormLocationsOfInterestModelProcessed {
         var school = false
         var commerces= false
@@ -98,9 +87,9 @@ class SetUpdateFormViewModel(
         )
     }
 
-    private fun buildFormPhotoAndWording(composition: PropertyAndPropertyPhoto, path: String?, context: Context) =
+    private fun buildFormPhotoAndWording(composition: PropertyAndPropertyPhoto, context: Context) =
         FormPhotoAndWording(
-            photo = Utils.getInternalBitmap(path, composition.propertyPhoto?.name, context),
+            photo = Utils.getInternalBitmap(composition.propertyId.toString(), composition.propertyPhoto?.name, context),
             wording = Utils.fromWordingToString(composition.propertyPhoto?.wording)
         )
 }

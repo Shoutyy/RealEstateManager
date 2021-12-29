@@ -9,7 +9,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_launcher_background"
+        android:background="@android:color/darker_gray"
         android:contentDescription="@string/illustration_property_s" />
 
     <FrameLayout

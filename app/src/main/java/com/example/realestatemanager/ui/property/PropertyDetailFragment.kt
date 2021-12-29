@@ -55,7 +55,7 @@ class PropertyDetailFragment : Fragment() {
         addMediaFragment()
         propertyDetailViewModel.getProperty(propertyId).observe(viewLifecycleOwner, Observer {
             updateUiWithPropertyData(it)
-            propertyDetailViewModel.getPropertyPhotos(propertyId, it.path, requireContext()).observe(this, Observer {propertyPhotos -> mediaFragment.receivePropertyPhotos(propertyPhotos) })
+            propertyDetailViewModel.getPropertyPhotos(propertyId, requireContext()).observe(viewLifecycleOwner, Observer {propertyPhotos -> mediaFragment.receivePropertyPhotos(propertyPhotos) })
         })
         propertyDetailViewModel.getLocationsOfInterest(propertyId).observe(viewLifecycleOwner, Observer { updateUiWithLocationsOfInterestData(it) })
     }
@@ -90,6 +90,7 @@ class PropertyDetailFragment : Fragment() {
             property_detail_agent.text = agentFullName
             property_detail_entry_date.text = entryDate
             if (saleDate.isNotEmpty()) {
+                property_detail_sale_date_layout.visibility = View.VISIBLE
                 property_detail_sale_date.text = saleDate
             } else {
                 property_detail_sale_date_layout.visibility = View.GONE

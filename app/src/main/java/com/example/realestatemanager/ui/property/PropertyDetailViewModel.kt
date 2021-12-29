@@ -19,8 +19,8 @@ class PropertyDetailViewModel (
     fun getProperty(propertyId: Int): LiveData<PropertyDetailModelProcessed> =
         Transformations.map(propertyDataSource.getProperty(propertyId)) { buildPropertyModelProcessed(it) }
 
-    fun getPropertyPhotos(propertyId: Int, path: String?, context: Context): LiveData<List<PhotoModelProcessed>> =
-        Transformations.map(propertyAndPropertyPhotoDataSource.getPropertyPhotos(propertyId)) { it.map { propertyPhoto -> buildPhotoModelProcessed(propertyPhoto, path, context) } }
+    fun getPropertyPhotos(propertyId: Int, context: Context): LiveData<List<PhotoModelProcessed>> =
+        Transformations.map(propertyAndPropertyPhotoDataSource.getPropertyPhotos(propertyId)) { it.map { propertyPhoto -> buildPhotoModelProcessed(propertyPhoto, context) } }
 
     fun getLocationsOfInterest(propertyId: Int): LiveData<LocationsOfInterestModelProcessed> =
         Transformations.map(propertyAndLocationOfInterestDataSource.getLocationsOfInterest(propertyId)) { buildLocationOfInterestModelProcessed(it) }
@@ -45,9 +45,9 @@ class PropertyDetailViewModel (
             saleDate = Utils.fromSaleDateToString(property.saleDate)
         )
 
-    private fun buildPhotoModelProcessed(propertyPhoto: PropertyAndPropertyPhoto, path: String?, context: Context?) =
+    private fun buildPhotoModelProcessed(propertyPhoto: PropertyAndPropertyPhoto, context: Context?) =
         PhotoModelProcessed(
-            photo = Utils.getInternalBitmap(path, propertyPhoto.propertyPhoto?.name, context),
+            photo = Utils.getInternalBitmap(propertyPhoto.propertyId.toString(),propertyPhoto.propertyPhoto?.name, context),
             wording = Utils.fromWordingToString(propertyPhoto.propertyPhoto?.wording)
         )
 

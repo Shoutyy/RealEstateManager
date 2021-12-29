@@ -1,7 +1,6 @@
 package com.example.realestatemanager.util
 
 import android.content.Context
-import android.util.Log
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -70,12 +69,12 @@ object Utils {
 
     /**
      * Return an image (Bitmap) from /data/user/0/com.example.realestatemanager/files
-     * @path is the name of the directory
+     * @propertyId is the name of the directory
      * @name is the name of the file as to be selected
      * */
 
-    fun getInternalBitmap(path: String?, name: String?, context: Context?): Bitmap {
-        val folder = File(context?.filesDir, path)
+    fun getInternalBitmap(propertyId: String?, name: String?, context: Context?): Bitmap {
+        val folder = File(context?.filesDir, propertyId)
         val file = File(folder, name)
         return if (file.exists()) {
             BitmapFactory.decodeStream(FileInputStream(file))
@@ -94,13 +93,13 @@ object Utils {
         return bitmap
     }
 
-    fun setInternalBitmap(photo: Bitmap?, path: String, name: String, context: Context?) {
-        val folder = File(context?.filesDir, path)
+    fun setInternalBitmap(photo: Bitmap?, propertyId: String, name: String, context: Context?) {
+        val folder = File(context?.filesDir, propertyId)
         val file = File(folder, name)
         file.parentFile.mkdirs()
         val fos = FileOutputStream(file)
         try {
-            photo?.compress(Bitmap.CompressFormat.PNG, 100, fos)
+            photo?.compress(Bitmap.CompressFormat.JPEG, 100, fos)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -285,5 +284,5 @@ object Utils {
             else -> Wording.STREET_VIEW
         }
 
-    fun createNamePhoto(index: Int) = "$index.png"
+    fun createNamePhoto(index: Int) = "$index.jpeg"
 }
