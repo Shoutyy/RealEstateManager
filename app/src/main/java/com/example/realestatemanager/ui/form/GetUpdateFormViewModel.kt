@@ -1,6 +1,7 @@
 package com.example.realestatemanager.ui.form
 
 import androidx.lifecycle.ViewModel
+import android.content.Context
 import com.example.realestatemanager.model.*
 import com.example.realestatemanager.util.Utils
 import com.example.realestatemanager.repository.*
@@ -9,11 +10,75 @@ import java.util.concurrent.Executor
 class GetUpdateFormViewModel(
     private val propertyDataSource: PropertyDataRepository,
     private val addressDataSource: AddressDataRepository,
-    private val agentDataSource: AgentDataRepository,
     private val propertyAndLocationOfInterestDataSource: PropertyAndLocationOfInterestDataRepository,
     private val propertyPhotoDataSource: PropertyPhotoDataRepository,
     private val propertyAndPropertyPhotoDataSource: PropertyAndPropertyPhotoDataRepository,
     private val executor: Executor) : ViewModel() {
+
+    fun deletePropertyAndPropertyPhoto(propertyPhotos: List<FormPhotoAndWording>, propertyId: Int, context: Context) =
+        executor.execute {
+            propertyPhotos.forEach { formPhotoAndWording ->
+                if (formPhotoAndWording.id != null) {
+                    propertyAndPropertyPhotoDataSource.deletePropertyPhoto(propertyId, formPhotoAndWording.id)
+                }
+                deletePropertyPhotoOnInternalStorage(propertyId, formPhotoAndWording.name, context)
+                deletePropertyPhoto(formPhotoAndWording.id)
+            }
+        }
+
+    private fun deletePropertyPhotoOnInternalStorage(propertyId: Int, name: String?, context: Context) {
+        Utils.deleteInternalBitmap(propertyId.toString(), name, context)
+    }
+
+    private fun deletePropertyPhoto(propertyPhotoId: Int?) =
+        executor.execute {
+            if (propertyPhotoId != null) {
+                propertyPhotoDataSource.deletePropertyPhoto(propertyPhotoId)
+            }
+        }
+
+    fun insertPropertyPhotos(propertyPhotos: List<FormPhotoAndWording>, propertyId: Int, lastName: String?,  context: Context) =
+        executor.execute {
+            propertyPhotos.forEachIndexed { index, formPhotoAndWording ->
+                val lastInt = lastName?.removeSuffix(".jpg")?.toInt()
+                val name = lastInt?.plus(index)?.plus(1).toString()
+                Utils.setInternalBitmap(formPhotoAndWording.photo, propertyId.toString(), name, context)
+                val propertyPhoto = PropertyPhoto(
+                    name = name,
+                    wording = Utils.fromStringToWording(formPhotoAndWording.wording),
+                    isThisTheIllustration = false
+                )
+                val rowIdPropertyPhoto = propertyPhotoDataSource.insertPropertyPhoto(propertyPhoto)
+                buildPropertyAndPropertyPhoto(propertyId, rowIdPropertyPhoto)
+            }
+        }
+
+
+    private fun buildPropertyAndPropertyPhoto(propertyId: Int, rowIdPropertyPhoto: Long) {
+        val propertyAndPropertyPhoto = PropertyAndPropertyPhoto(
+            propertyId = propertyId,
+            propertyPhotoId = rowIdPropertyPhoto.toInt()
+        )
+        insertPropertyAndPropertyPhoto(propertyAndPropertyPhoto)
+    }
+
+    fun updateIllustrationPropertyPhoto(formPhotoAndWording: FormPhotoAndWording) =
+        executor.execute {
+            if (formPhotoAndWording.id != null && formPhotoAndWording.name != null) {
+                val propertyPhoto = PropertyPhoto(
+                    id = formPhotoAndWording.id,
+                    name = formPhotoAndWording.name,
+                    wording = Utils.fromStringToWording(formPhotoAndWording.wording),
+                    isThisTheIllustration = true
+                )
+                propertyPhotoDataSource.updatePropertyPhoto(propertyPhoto)
+            }
+        }
+
+    private fun insertPropertyAndPropertyPhoto(propertyAndPropertyPhoto: PropertyAndPropertyPhoto) =
+        executor.execute {
+            propertyAndPropertyPhotoDataSource.insertPropertyPhoto(propertyAndPropertyPhoto)
+        }
 
     fun updateAddress(addressModelRaw: AddressModelRaw) = executor.execute { addressDataSource.updateAddress(buildAddressForDatabase(addressModelRaw)) }
 

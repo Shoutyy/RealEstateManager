@@ -14,6 +14,6 @@ class PropertyAndPropertyPhotoDataRepository(private val propertyAndPropertyPhot
 
     fun updatePropertyPhoto(propertyAndPropertyPhoto: PropertyAndPropertyPhoto) = propertyAndPropertyPhotoDao.updatePropertyPhoto(propertyAndPropertyPhoto)
 
-    fun deletePropertyPhoto(propertyId: Int) = propertyAndPropertyPhotoDao.deletePropertyPhoto(propertyId)
+    fun deletePropertyPhoto(propertyId: Int, propertyPhotoId: Int) = propertyAndPropertyPhotoDao.deletePropertyPhoto(propertyId, propertyPhotoId)
 
 }

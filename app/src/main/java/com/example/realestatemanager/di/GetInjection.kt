@@ -2,10 +2,9 @@ package com.example.realestatemanager.di
 
 import android.content.Context
 import com.example.realestatemanager.database.AppDatabase
-import com.example.realestatemanager.repository.AgentDataRepository
-import com.example.realestatemanager.repository.PropertyAndLocationOfInterestDataRepository
-import com.example.realestatemanager.repository.PropertyAndPropertyPhotoDataRepository
-import com.example.realestatemanager.repository.PropertyDataRepository
+import com.example.realestatemanager.repository.*
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 class GetInjection {
 
@@ -16,9 +15,9 @@ class GetInjection {
             return PropertyDataRepository(database.propertyDao())
         }
 
-        private fun provideAgentDataSource(context: Context): AgentDataRepository {
+        private fun provideAddressDataSource(context: Context): AddressDataRepository {
             val database = AppDatabase.getInstance(context)
-            return AgentDataRepository(database.agentDao())
+            return AddressDataRepository(database.addressDao())
         }
 
         private fun providePropertyAndLocationOfInterestDataSource(context: Context): PropertyAndLocationOfInterestDataRepository {
@@ -26,20 +25,33 @@ class GetInjection {
             return PropertyAndLocationOfInterestDataRepository(database.propertyAndLocationOfInterestDao())
         }
 
+        private fun providePropertyPhotoDataSource(context: Context): PropertyPhotoDataRepository {
+            val database = AppDatabase.getInstance(context)
+            return PropertyPhotoDataRepository(database.propertyPhotoDao())
+        }
+
         private fun providePropertyAndPropertyPhoto(context: Context): PropertyAndPropertyPhotoDataRepository {
             val database = AppDatabase.getInstance(context)
             return PropertyAndPropertyPhotoDataRepository(database.propertyAndPropertyPhotoDao())
         }
 
+        private fun provideExecutor() : Executor {
+            return Executors.newSingleThreadExecutor()
+        }
+
         fun provideViewModelFactory(context: Context): GetViewModelFactory {
             val dataSourceProperty = providePropertyDataSource(context)
-            val dataSourceAgent = provideAgentDataSource(context)
+            val dataSourceAddress = provideAddressDataSource(context)
             val dataSourcePropertyAndLocationOfInterest = providePropertyAndLocationOfInterestDataSource(context)
+            val dataSourcePropertyPhoto = providePropertyPhotoDataSource(context)
             val dataSourcePropertyAndPropertyPhoto = providePropertyAndPropertyPhoto(context)
+            val executor = provideExecutor()
             return GetViewModelFactory(dataSourceProperty,
-                dataSourceAgent,
+                dataSourceAddress,
                 dataSourcePropertyAndLocationOfInterest,
-                dataSourcePropertyAndPropertyPhoto)
+                dataSourcePropertyPhoto,
+                dataSourcePropertyAndPropertyPhoto,
+                executor)
         }
 
     }

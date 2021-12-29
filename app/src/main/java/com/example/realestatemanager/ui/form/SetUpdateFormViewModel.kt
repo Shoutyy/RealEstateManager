@@ -52,7 +52,9 @@ class SetUpdateFormViewModel(
         description = property.description,
         available = property.available,
         entryDate = Utils.fromEntryDateToString(property.entryDate),
+        entryDateLong = property.entryDate,
         saleDate = Utils.fromSaleDateToString(property.saleDate),
+        saleDateLong = property.saleDate ?: 0,
         addressId = property.addressId,
         path = property.address?.path,
         complement = if (property.address?.complement != null) { property.address?.complement } else { "" },
@@ -89,6 +91,8 @@ class SetUpdateFormViewModel(
 
     private fun buildFormPhotoAndWording(composition: PropertyAndPropertyPhoto, context: Context) =
         FormPhotoAndWording(
+            id = composition.propertyPhoto?.id,
+            name = composition.propertyPhoto?.name,
             photo = Utils.getInternalBitmap(composition.propertyId.toString(), composition.propertyPhoto?.name, context),
             wording = Utils.fromWordingToString(composition.propertyPhoto?.wording)
         )

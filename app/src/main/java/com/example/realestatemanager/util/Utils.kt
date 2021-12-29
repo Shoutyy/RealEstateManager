@@ -1,10 +1,17 @@
 package com.example.realestatemanager.util
 
 import android.content.Context
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
+import android.os.Build
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.res.TypedArrayUtils.getString
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -34,7 +41,6 @@ object Utils {
      */
     val todayDate: String
         get() {
-            val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             return dateFormat.format(Date())
         }
 
@@ -109,6 +115,36 @@ object Utils {
                 e.printStackTrace()
             }
         }
+    }
+
+    fun deleteInternalBitmap(propertyId: String, name: String?, context: Context) {
+        val folder = File(context.filesDir, propertyId)
+        val file = File(folder, name)
+        file.delete()
+    }
+
+    fun sendNotification(context: Context, somethingHappened: String?) {
+        val CHANNEL_ID = "CHANNEL_ID"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = context.getString(R.string.channel_name)
+            val descriptionText = context.getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setContentTitle("RealEstateManager")
+            .setContentText(somethingHappened)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        NotificationManagerCompat.from(context).notify(0, builder.build())
     }
 
     //---TO-DATABASE---\\
@@ -284,5 +320,5 @@ object Utils {
             else -> Wording.STREET_VIEW
         }
 
-    fun createNamePhoto(index: Int) = "$index.jpeg"
+    fun createNamePhoto(index: Int) = "$index.jpg"
 }

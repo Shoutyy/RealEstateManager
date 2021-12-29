@@ -2,8 +2,8 @@ package com.example.realestatemanager.model
 
 enum class LocationOfInterest {
     SCHOOL,
-    PARK,
     COMMERCES,
+    PARK,
+    SUBWAYS,
     TRAIN,
-    SUBWAYS
 }

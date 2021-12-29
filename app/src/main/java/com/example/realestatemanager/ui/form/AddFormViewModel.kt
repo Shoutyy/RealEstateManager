@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.realestatemanager.model.*
 import com.example.realestatemanager.util.Utils
 import com.example.realestatemanager.repository.*
+import com.example.realestatemanager.R
 import java.util.concurrent.Executor
 
 class AddFormViewModel (
@@ -130,7 +131,7 @@ class AddFormViewModel (
                 insertPropertyPhoto(propertyPhoto, rowIdProperty)
             }
         }
-        sendNotification(addFormModelRaw)
+        Utils.sendNotification(addFormModelRaw.context, addFormModelRaw.context.getString(R.string.notification_property_add))
     }
 
     private fun insertPropertyPhoto(propertyPhoto: PropertyPhoto, rowIdProperty: Long) =
@@ -142,8 +143,8 @@ class AddFormViewModel (
 
     private fun buildPropertyAndPropertyPhoto(rowIdProperty: Long, rowIdPropertyPhoto: Long) {
         val propertyAndPropertyPhoto = PropertyAndPropertyPhoto(
-            rowIdProperty.toInt(),
-            rowIdPropertyPhoto.toInt()
+            propertyId = rowIdProperty.toInt(),
+            propertyPhotoId = rowIdPropertyPhoto.toInt()
         )
         insertPropertyAndPropertyPhoto(propertyAndPropertyPhoto)
     }
@@ -152,16 +153,6 @@ class AddFormViewModel (
         executor.execute {
             propertyAndPropertyPhotoDataSource.insertPropertyPhoto(propertyAndPropertyPhoto)
         }
-
-    private fun sendNotification(addFormModelRaw: AddFormModelRaw) {
-        /*
-        val builder = NotificationCompat.Builder(addFormModelRaw.context, channelId)
-                .setSmallIcon(R.drawable.ic_launcher_background)
-                .setContentTitle("RealEstateManager")
-                .setContentText("Your property as been add.")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        NotificationManagerCompat.from(addFormModelRaw.context).notify(0, builder.build())*/
-    }
 
     //---FACTORY---\\
     private fun returnComplementOrNull(complement: String) = if (complement.isNotEmpty()) { complement } else { null }
