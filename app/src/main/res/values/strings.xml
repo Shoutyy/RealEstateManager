@@ -26,6 +26,7 @@
     <string name="train">train</string>
     <string name="location_of_interest">location of interest</string>
     <string name="agent_in_charge">Agent in charge</string>
+    <string name="map">Map</string>
 
     //property list
     <string name="type">type</string>
@@ -64,6 +65,7 @@
     <string name="maps_static_error_zero_results">No property found for this address.</string>
     <string name="location_example">location example</string>
     <string name="location">location</string>
+
 
     //form
     <string-array name="form_wording">

@@ -3,6 +3,13 @@ package com.example.realestatemanager.ui.property
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.util.Log
+import com.bumptech.glide.Glide
+import com.example.realestatemanager.BuildConfig
+import com.example.realestatemanager.network.GoogleStreams
+import com.example.realestatemanager.model.geocoding.GeocodingResponse
+import io.reactivex.disposables.Disposable
+import io.reactivex.observers.DisposableObserver
 import android.view.View
 import android.view.ViewGroup
 import com.example.realestatemanager.R
@@ -95,6 +102,7 @@ class PropertyDetailFragment : Fragment() {
             } else {
                 property_detail_sale_date_layout.visibility = View.GONE
             }
+            path?.let { executeHttpRequestWithRetrofitGeocoding(it, city) }
         }
     }
 
@@ -129,5 +137,50 @@ class PropertyDetailFragment : Fragment() {
                 property_detail_empty_location_of_interest.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun executeHttpRequestWithRetrofitGeocoding(path: String, city: String) {
+        val addressGeocoding = "$path, $city"
+        val disposable: Disposable =
+            GoogleStreams.streamFetchGeocoding(addressGeocoding, BuildConfig.GEOCODING_API_KEY)
+                .subscribeWith(object : DisposableObserver<GeocodingResponse>() {
+            override fun onNext(geocodingResponse: GeocodingResponse) {
+                Log.e("Geocoding", "On Next")
+                when (geocodingResponse.status) {
+                    "OK" -> updateUiWithMapsStatic(
+                        geocodingResponse.results[0].geometry.location.lat,
+                        geocodingResponse.results[0].geometry.location.lng
+                    )
+                    "ZERO_RESULTS" -> {
+                        property_detail_maps_static.visibility = View.GONE
+                        property_detail_maps_static_error.visibility = View.VISIBLE
+                        property_detail_maps_static_error.text = getString(R.string.maps_static_error_zero_results)
+                    }
+                    "UNKNOWN_ERROR" -> {
+                        property_detail_maps_static.visibility = View.GONE
+                        property_detail_maps_static_error.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onError(e: Throwable) {
+                Log.e("Geocoding", "On Error" + Log.getStackTraceString(e))
+                property_detail_maps_static_error.visibility = View.VISIBLE
+            }
+
+            override fun onComplete() {
+                Log.e("Geocoding", "On Complete !!")
+            }
+        })
+    }
+
+    private fun updateUiWithMapsStatic(lat: Double, lng: Double) {
+        val zoom = "16"
+        val size = "400x400"
+        val color = "red"
+        val mapsStaticApiKey = BuildConfig.MAPS_STATIC_API_KEY
+        val url = "https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=$zoom&size=$size&markers=color:$color%7C$lat,$lng&key=$mapsStaticApiKey"
+        property_detail_maps_static.visibility = View.VISIBLE
+        Glide.with(this@PropertyDetailFragment).load(url).into(property_detail_maps_static)
     }
 }

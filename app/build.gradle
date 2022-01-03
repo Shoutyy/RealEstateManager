@@ -16,6 +16,13 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true
+
+        buildConfigField("String", "MAPS_ANDROID_API_KEY", maps_android_api_key)
+        buildConfigField("String", "GEOCODING_API_KEY", geocoding_api_key)
+        buildConfigField("String", "MAPS_STATIC_API_KEY", maps_static_api_key)
+        resValue("string", "MAPS_ANDROID_API_KEY", maps_android_api_key)
     }
 
     buildTypes {
@@ -78,6 +85,24 @@ dependencies {
 
     //AwesomeValidation
     implementation 'com.basgeekball:awesome-validation:4.3'
+
+    //Maps
+    implementation 'com.google.android.gms:play-services-maps:18.0.1'
+
+    //Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+
+    //Rxjava
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+    //Multidex
+    implementation 'com.android.support:multidex:1.0.3'
+
+    //Glide
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
 
     androidTestImplementation "android.arch.core:core-testing:1.1.1"
 }

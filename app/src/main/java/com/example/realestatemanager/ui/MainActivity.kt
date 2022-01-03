@@ -1,5 +1,6 @@
 package com.example.realestatemanager.ui
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import com.example.realestatemanager.R
 import android.util.Log
@@ -14,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import android.content.Intent
+import com.example.realestatemanager.ui.map.PICK_PROPERTY_DATA
 import com.example.realestatemanager.ui.form.FormBaseActivity
 import com.example.realestatemanager.ui.property.PropertyDetailActivity
 import com.example.realestatemanager.ui.property.PropertyDetailFragment
@@ -21,9 +23,11 @@ import com.example.realestatemanager.ui.property.PropertyListFragment
 import com.example.realestatemanager.ui.emptyPropertyDetail.EmptyPropertyDetailFragment
 import com.example.realestatemanager.ui.form.AddFormActivity
 import com.example.realestatemanager.ui.form.UpdateFormActivity
+import com.example.realestatemanager.ui.map.MapActivity
 
 const val INTENT_MAIN_TO_DETAIL = "INTENT_MAIN_TO_DETAIL"
 const val INTENT_MAIN_TO_UPDATE = "INTENT_MAIN_TO_UPDATE"
+const val PICK_PROPERTY_REQUEST = 1234
 
 class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInteractionListener {
 
@@ -81,11 +85,28 @@ class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInt
     private fun configureNavigationView() {
         activity_home_nav_view.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.activity_main_drawer_temp -> { println("do something"); true }
+                R.id.activity_home_drawer_map -> {
+                    val intent = Intent(this, MapActivity::class.java)
+                    //startActivity(intent)*
+                    startActivityForResult(intent, PICK_PROPERTY_REQUEST)
+                    true
+                }
                 else -> false
             }
             this.activity_main_drawer_layout.closeDrawer(GravityCompat.START)
             true
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_PROPERTY_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    val propertyId: Int = data.getIntExtra(PICK_PROPERTY_DATA, 1)
+                    onListFragmentInteraction(propertyId)
+                }
+            }
         }
     }
 
