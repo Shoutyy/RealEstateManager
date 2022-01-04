@@ -7,6 +7,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.maps.CameraUpdateFactory
 import android.os.Bundle
+import android.Manifest
+import android.annotation.SuppressLint
+import android.location.Location
+import com.google.android.gms.location.LocationServices
+import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -16,6 +21,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.example.realestatemanager.BuildConfig
 import com.google.android.gms.maps.model.LatLng
 import com.example.realestatemanager.R
+import com.sembozdemir.permissionskt.askPermissions
+import com.sembozdemir.permissionskt.handlePermissionsResult
 import com.example.realestatemanager.network.GoogleStreams
 import com.example.realestatemanager.model.geocoding.GeocodingResponse
 import com.example.realestatemanager.di.MapInjection
@@ -23,6 +30,7 @@ import com.example.realestatemanager.model.MapPropertyModelProcessed
 import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableObserver
 import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.activity_map.*
 
 const val PICK_PROPERTY_DATA = "PICK_PROPERTY_DATA"
 
@@ -47,15 +55,43 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerC
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        handlePermissionsResult(requestCode, permissions, grantResults)
+    }
+
+
+    @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        val newYork = LatLng(40.712775, -74.005973)
-        val zoom = 10.toFloat()
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newYork, zoom))
-        mMap.setOnMarkerClickListener(this)
+        askPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION) {
+            onGranted {
+                val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this@MapActivity)
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location: Location? ->
+                        if (location != null) {
+                            val latitude =  location.latitude
+                            val longitude = location.longitude
+                            mMap.isMyLocationEnabled = true
+                            mMap.uiSettings.isMyLocationButtonEnabled = true
+                            val myLocation = LatLng(latitude, longitude)
+                            val zoom = 11.toFloat()
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, zoom))
+                        } else {
+                            Snackbar.make(coordinatorLayout_map_activity, getString(R.string.map_need_location), Snackbar.LENGTH_LONG).show()
+                        }
+                        mMap.setOnMarkerClickListener(this@MapActivity)
+                    }
 
-        mapViewModel.properties.observe(this, Observer { it.map { mapPropertyModelProcessed ->  setMarkerOnMap(mapPropertyModelProcessed) } })
+                mapViewModel.properties.observe(this@MapActivity, Observer { it.map { propertyModelProcessed ->  setMarkerOnMap(propertyModelProcessed) } })
+            }
+            onShowRationale { request ->
+                Snackbar.make(coordinatorLayout_map_activity, getString(R.string.map_need_location_permission), Snackbar.LENGTH_INDEFINITE)
+                    .setAction(getString(R.string.map_location_permission_retry)) { request.retry() }
+                    .show()
+            }
+        }
     }
 
     private fun setMarkerOnMap(mapPropertyModelProcessed: MapPropertyModelProcessed) {
