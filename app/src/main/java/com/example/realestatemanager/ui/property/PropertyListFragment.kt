@@ -15,21 +15,38 @@ import androidx.fragment.app.Fragment
 import com.example.realestatemanager.di.ListInjection
 import com.example.realestatemanager.model.IllustrationModelProcessed
 
+const val ARG_PROPERTY_LIST_PROPERTIES_ID = "ARG_PROPERTY_LIST_PROPERTIES_ID"
 
 class PropertyListFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() =
-            PropertyListFragment().apply { }
+        fun newInstance(propertiesId: IntArray? = null) =
+            PropertyListFragment().apply {
+                if (propertiesId != null) {
+                    arguments = Bundle().apply {
+                        putIntArray(ARG_PROPERTY_LIST_PROPERTIES_ID, propertiesId)
+                    }
+                }
+            }
     }
 
+    private val propertiesId = mutableListOf<Int>()
     private var listener: OnListFragmentInteractionListener? = null
 
     private val propertyListViewModel : PropertyListViewModel by lazy { ViewModelProviders.of(this, ListInjection.provideViewModelFactory(requireContext()))[PropertyListViewModel::class.java] }
     private val propertyListAdapter: PropertyListRecyclerViewAdapter = PropertyListRecyclerViewAdapter()
 
     private val illustrations = mutableListOf<IllustrationModelProcessed>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            if (it.getIntArray(ARG_PROPERTY_LIST_PROPERTIES_ID) != null) {
+                propertiesId.addAll(it.getIntArray(ARG_PROPERTY_LIST_PROPERTIES_ID)!!.toMutableList())
+            }
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
@@ -45,10 +62,17 @@ class PropertyListFragment : Fragment() {
     }
 
     private fun getProperties() =
-        propertyListViewModel.properties.observe(viewLifecycleOwner, Observer {
-            propertyListAdapter.receivePropertiesDataAndListener(it, listener)
-            it.map { property -> getPropertyIllustration(property.propertyId) }
-        })
+        if (propertiesId.isNotEmpty()) {
+            propertyListViewModel.getProperties(propertiesId).observe(viewLifecycleOwner, Observer {
+                propertyListAdapter.receivePropertiesDataAndListener(it, listener)
+                it.map { property -> getPropertyIllustration(property.propertyId) }
+            })
+        } else {
+            propertyListViewModel.allProperties.observe(viewLifecycleOwner, Observer {
+                propertyListAdapter.receivePropertiesDataAndListener(it, listener)
+                it.map { property -> getPropertyIllustration(property.propertyId) }
+            })
+        }
 
     private fun getPropertyIllustration(propertyId: Int) =
         propertyListViewModel.getPropertyIllustration(propertyId, requireContext()).observe(viewLifecycleOwner, Observer {

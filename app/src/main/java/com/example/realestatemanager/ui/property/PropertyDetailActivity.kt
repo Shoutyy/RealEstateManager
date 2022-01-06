@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.example.realestatemanager.ui.INTENT_MAIN_TO_DETAIL
+import com.example.realestatemanager.ui.result.INTENT_RESULT_TO_DETAIL
 import com.example.realestatemanager.ui.form.UpdateFormActivity
 
 
@@ -31,6 +32,8 @@ class PropertyDetailActivity : AppCompatActivity() {
     private fun retrievesIntent() {
         if (intent.hasExtra(INTENT_MAIN_TO_DETAIL)) {
             propertyId = intent.getIntExtra(INTENT_MAIN_TO_DETAIL, 0)
+        } else if (intent.hasExtra(INTENT_RESULT_TO_DETAIL)) {
+            propertyId = intent.getIntExtra(INTENT_RESULT_TO_DETAIL, 0)
         }
     }
 
@@ -46,6 +49,7 @@ class PropertyDetailActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
+            android.R.id.home -> { finish(); true }
             R.id.update_button -> {
                 if (propertyId != 0) {
                     val intent = Intent(this, UpdateFormActivity::class.java)

@@ -6,7 +6,7 @@ import com.example.realestatemanager.model.PropertyAndLocationOfInterest
 
 class PropertyAndLocationOfInterestDataRepository(private val propertyAndLocationOfInterestDao: PropertyAndLocationOfInterestDao) {
 
-    fun getLocationsOfInterest(propertyId: Int): LiveData<List<PropertyAndLocationOfInterest>> { return propertyAndLocationOfInterestDao.getLocationsOfInterest(propertyId) }
+    fun getLocationsOfInterest(propertyId: Int): LiveData<List<PropertyAndLocationOfInterest>> = propertyAndLocationOfInterestDao.getLocationsOfInterest(propertyId)
 
     fun insertLocationOfInterest(propertyAndLocationOfInterest: PropertyAndLocationOfInterest) = propertyAndLocationOfInterestDao.insertLocationOfInterest(propertyAndLocationOfInterest)
 

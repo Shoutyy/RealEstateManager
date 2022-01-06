@@ -9,8 +9,8 @@ import com.example.realestatemanager.repository.PropertyDataRepository
 
 class MapViewModel(propertyDataSource: PropertyDataRepository) : ViewModel() {
 
-    private var _properties: LiveData<List<MapPropertyModelProcessed>> = Transformations.map(propertyDataSource.getProperties()) { it.map { property -> buildAddressModelProcessed(property) } }
-    val properties: LiveData<List<MapPropertyModelProcessed>> = _properties
+    private var _allProperties: LiveData<List<MapPropertyModelProcessed>> = Transformations.map(propertyDataSource.getAllProperties()) { it.map { property -> buildAddressModelProcessed(property) } }
+    val allProperties: LiveData<List<MapPropertyModelProcessed>> = _allProperties
 
     private fun buildAddressModelProcessed(property: Property) =
         MapPropertyModelProcessed(

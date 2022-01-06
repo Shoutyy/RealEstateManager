@@ -2,13 +2,14 @@ package com.example.realestatemanager.database.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.example.realestatemanager.model.Property
 
 @Dao
 interface PropertyDao {
 
     @Query("SELECT * FROM Property INNER JOIN Address ON Property.addressId = Address.address_id INNER JOIN Agent ON Property.agentId = Agent.agent_id")
-    fun getProperties(): LiveData<List<Property>>
+    fun getAllProperties(): LiveData<List<Property>>
 
     @Query("SELECT * FROM Property INNER JOIN Address ON Property.addressId = Address.address_id INNER JOIN Agent ON Property.agentId = Agent.agent_id WHERE :id == id")
     fun getProperty(id: Int): LiveData<Property>
@@ -19,7 +20,10 @@ interface PropertyDao {
     @Update
     fun updateProperty(property: Property)
 
-    @Query("DELETE FROM Property WHERE :id == id")
-    fun deleteProperty(id: Int)
+    @RawQuery(observedEntities = [Property::class])
+    fun customSearchPropertiesId(query: SimpleSQLiteQuery): LiveData<List<Int>>
+
+    @RawQuery(observedEntities = [Property::class])
+    fun getProperties(query: SimpleSQLiteQuery): LiveData<List<Property>>
 
 }

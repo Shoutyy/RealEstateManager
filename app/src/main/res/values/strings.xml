@@ -157,4 +157,48 @@
     <string name="map_location_permission_retry">Retry</string>
     <string name="map_need_location">Map need location</string>
 
+    //search
+    <string name="search_min_price">min price</string>
+    <string name="search_max_price">max price</string>
+    <string name="search_min_square_meters">min square meters</string>
+    <string name="search_max_square_meters">max square meters</string>
+    <string name="search_min_rooms">min rooms</string>
+    <string name="search_min_bathrooms">min bathrooms</string>
+    <string name="search_min_bedrooms">min bedrooms</string>
+    <string name="search_since">Since</string>
+    <string name="search_indifferent">Indifferent</string>
+    <string name="search_button">Search</string>
+    <string name="search_availability">Availability</string>
+
+    <string-array name="search_district">
+        <item></item>
+        <item>Bronx</item>
+        <item>Brooklyn</item>
+        <item>Manhattan</item>
+        <item>Queens</item>
+        <item>Staten Island</item>
+    </string-array>
+
+    <string-array name="search_city">
+        <item></item>
+        <item>New York</item>
+    </string-array>
+
+    <string-array name="search_country">
+        <item></item>
+        <item>United States</item>
+    </string-array>
+
+    <string-array name="search_type">
+        <item></item>
+        <item>Flat</item>
+        <item>Penthouse</item>
+        <item>Mansion</item>
+        <item>Duplex</item>
+        <item>House</item>
+        <item>Loft</item>
+        <item>Townhouse</item>
+        <item>Condo</item>
+    </string-array>
+
 </resources>

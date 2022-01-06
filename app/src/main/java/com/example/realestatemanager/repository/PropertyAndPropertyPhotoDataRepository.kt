@@ -6,9 +6,9 @@ import com.example.realestatemanager.model.PropertyAndPropertyPhoto
 
 class PropertyAndPropertyPhotoDataRepository(private val propertyAndPropertyPhotoDao: PropertyAndPropertyPhotoDao) {
 
-    fun getPropertyIllustration(propertyId: Int, isThisTheIllustration: Boolean): LiveData<PropertyAndPropertyPhoto> { return propertyAndPropertyPhotoDao.getPropertyIllustration(propertyId, isThisTheIllustration) }
+    fun getPropertyIllustration(propertyId: Int, isThisTheIllustration: Boolean): LiveData<PropertyAndPropertyPhoto> = propertyAndPropertyPhotoDao.getPropertyIllustration(propertyId, isThisTheIllustration)
 
-    fun getPropertyPhotos(propertyId: Int): LiveData<List<PropertyAndPropertyPhoto>> { return propertyAndPropertyPhotoDao.getPropertyPhotos(propertyId) }
+    fun getPropertyPhotos(propertyId: Int): LiveData<List<PropertyAndPropertyPhoto>> = propertyAndPropertyPhotoDao.getPropertyPhotos(propertyId)
 
     fun insertPropertyPhoto(propertyAndPropertyPhoto: PropertyAndPropertyPhoto) = propertyAndPropertyPhotoDao.insertPropertyPhoto(propertyAndPropertyPhoto)
 

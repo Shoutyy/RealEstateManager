@@ -6,11 +6,11 @@ import com.example.realestatemanager.model.Agent
 
 class AgentDataRepository(private val agentDao: AgentDao) {
 
-    fun getAgents(): LiveData<List<Agent>> { return agentDao.getAgents() }
+    fun getAgents(): LiveData<List<Agent>> = agentDao.getAgents()
 
-    fun getAgent(agentId: Int): LiveData<Agent> { return agentDao.getAgent(agentId) }
+    fun getAgent(agentId: Int): LiveData<Agent> = agentDao.getAgent(agentId)
 
-    fun insertAgent(agent: Agent): Long { return agentDao.insertAgent(agent) }
+    fun insertAgent(agent: Agent): Long = agentDao.insertAgent(agent)
 
     fun updateAgent(agent: Agent) = agentDao.updateAgent(agent)
 
