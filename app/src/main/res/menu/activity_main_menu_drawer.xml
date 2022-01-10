@@ -8,5 +8,10 @@
             android:id="@+id/activity_home_drawer_map"
             android:title="@string/map"
             android:icon="@drawable/baseline_create_24" />
+
+        <item
+            android:id="@+id/activity_main_drawer_loan_simulator"
+            android:title="@string/loan_simulator"
+            android:icon="@drawable/baseline_create_24"/>
     </group>
 </menu>

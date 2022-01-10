@@ -16,10 +16,12 @@
         <entry key="app/src/main/res/drawable/baseline_place_24.xml" value="0.14479166666666668" />
         <entry key="app/src/main/res/drawable/baseline_settings_overscan_24.xml" value="0.14479166666666668" />
         <entry key="app/src/main/res/drawable/baseline_today_24.xml" value="0.14479166666666668" />
+        <entry key="app/src/main/res/layout-w600dp/activity_loan_simulator.xml" value="0.10582010582010581" />
         <entry key="app/src/main/res/layout-w600dp/activity_main.xml" value="0.10890652557319223" />
         <entry key="app/src/main/res/layout-w600dp/activity_search_form.xml" value="0.10582010582010581" />
         <entry key="app/src/main/res/layout-w600dp/form.xml" value="0.10890652557319223" />
         <entry key="app/src/main/res/layout-w600dp/property_detail_fragment.xml" value="0.1328125" />
+        <entry key="app/src/main/res/layout/activity_loan_simulator.xml" value="0.125" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1118659420289855" />
         <entry key="app/src/main/res/layout/activity_main_nav_header.xml" value="0.12864583333333332" />
         <entry key="app/src/main/res/layout/activity_map.xml" value="0.25677083333333334" />

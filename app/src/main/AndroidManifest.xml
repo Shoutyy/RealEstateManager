@@ -54,6 +54,11 @@
             android:label="Result"
             android:parentActivityName=".ui.searchForm.SearchFormActivity">
         </activity>
+        <activity
+            android:name=".ui.loanSimulator.LoanSimulatorActivity"
+            android:label="Loan simulator"
+            android:parentActivityName=".ui.MainActivity">
+        </activity>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.com.vansuita.pickimage.provider"

@@ -7,6 +7,7 @@
     <string name="update">Update</string>
     <string name="add">Add</string>
     <string name="update_button_select_property_first">To update a property, select a property first in the list.</string>
+    <string name="loan_simulator">Loan simulator</string>
 
     //drawer menu
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -169,6 +170,16 @@
     <string name="search_indifferent">Indifferent</string>
     <string name="search_button">Search</string>
     <string name="search_availability">Availability</string>
+
+    //loan simulator
+    <string name="loan_simulator_price">Price of the property you wish to acquire</string>
+    <string name="loan_simulator_period">Desired repayment period</string>
+    <string name="loan_simulator_contribution">Your contribution</string>
+    <string name="loan_simulator_amount">Loan amount :</string>
+    <string name="loan_simulator_rate">Loan rate assessed at :</string>
+    <string name="loan_simulator_monthly_payment">Monthly payment to be repaid assessed at :</string>
+    <string name="estimate">Estimate</string>
+    <string name="estimating">Estimating</string>
 
     <string-array name="search_district">
         <item></item>

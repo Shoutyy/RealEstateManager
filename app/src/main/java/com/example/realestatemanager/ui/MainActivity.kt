@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction
 import android.content.Intent
 import com.example.realestatemanager.ui.map.PICK_PROPERTY_DATA
 import com.example.realestatemanager.ui.form.FormBaseActivity
+import com.example.realestatemanager.ui.loanSimulator.LoanSimulatorActivity
 import com.example.realestatemanager.ui.searchForm.SearchFormActivity
 import com.example.realestatemanager.ui.property.PropertyDetailActivity
 import com.example.realestatemanager.ui.property.PropertyDetailFragment
@@ -92,11 +93,12 @@ class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInt
             when (it.itemId) {
                 R.id.activity_home_drawer_map -> {
                     val intent = Intent(this, MapActivity::class.java)
-                    //startActivity(intent)*
                     startActivityForResult(intent, PICK_PROPERTY_REQUEST)
-                    true
                 }
-                else -> false
+                R.id.activity_main_drawer_loan_simulator -> {
+                    val intent = Intent(this, LoanSimulatorActivity::class.java)
+                    startActivity(intent)
+                }
             }
             this.activity_main_drawer_layout.closeDrawer(GravityCompat.START)
             true
