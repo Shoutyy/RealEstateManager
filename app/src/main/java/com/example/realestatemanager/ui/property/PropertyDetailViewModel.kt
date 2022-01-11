@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.realestatemanager.model.*
 import com.example.realestatemanager.util.Utils
+import kotlinx.coroutines.withContext
 import com.example.realestatemanager.repository.PropertyDataRepository
 import com.example.realestatemanager.repository.PropertyAndLocationOfInterestDataRepository
 import com.example.realestatemanager.repository.PropertyAndPropertyPhotoDataRepository
