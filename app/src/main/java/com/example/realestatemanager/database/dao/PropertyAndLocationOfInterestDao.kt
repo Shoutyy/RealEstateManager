@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Update
 import com.example.realestatemanager.model.PropertyAndLocationOfInterest
 
 @Dao
@@ -15,9 +14,6 @@ interface PropertyAndLocationOfInterestDao {
 
     @Insert
     fun insertLocationOfInterest(propertyAndLocationOfInterest: PropertyAndLocationOfInterest)
-
-    @Update
-    fun updateLocationOfInterest(propertyAndLocationOfInterest: PropertyAndLocationOfInterest)
 
     @Query("DELETE FROM PropertyAndLocationOfInterest WHERE :propertyId == propertyId AND :locationOfInterestId == locationOfInterestId")
     fun deleteLocationOfInterest(propertyId: Int, locationOfInterestId: Int)
