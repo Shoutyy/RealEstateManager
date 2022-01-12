@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.maps.CameraUpdateFactory
 import android.os.Bundle
 import android.Manifest
+import androidx.core.content.ContextCompat
 import android.annotation.SuppressLint
 import android.location.Location
 import com.google.android.gms.location.LocationServices
@@ -89,6 +90,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerC
             onShowRationale { request ->
                 Snackbar.make(coordinatorLayout_map_activity, getString(R.string.map_need_location_permission), Snackbar.LENGTH_INDEFINITE)
                     .setAction(getString(R.string.map_location_permission_retry)) { request.retry() }
+                    .setActionTextColor(ContextCompat.getColor(applicationContext, R.color.redAccent))
                     .show()
             }
         }

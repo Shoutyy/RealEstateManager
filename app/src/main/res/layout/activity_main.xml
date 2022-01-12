@@ -10,26 +10,31 @@
     tools:openDrawer="start"
     android:id="@+id/activity_main_drawer_layout">
 
-    <LinearLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:id="@+id/coordinatorLayout_home_activity">
 
-        <include
-            layout="@layout/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </include>
-
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/activity_property_list_container">
-        </FrameLayout>
+            android:orientation="vertical">
 
+            <include
+                layout="@layout/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </include>
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/activity_property_list_container">
+            </FrameLayout>
 
-    </LinearLayout>
+        </LinearLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/activity_home_nav_view"
@@ -41,6 +46,7 @@
         app:menu="@menu/activity_main_menu_drawer"
         app:itemTextColor="@android:color/white"
         app:itemIconTint="@android:color/white"
+        android:theme="@style/NavigationDrawerStyle"
         android:background="@color/primary">
     </com.google.android.material.navigation.NavigationView>
 

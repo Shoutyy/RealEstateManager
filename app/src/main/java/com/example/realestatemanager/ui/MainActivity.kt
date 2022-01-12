@@ -2,6 +2,8 @@ package com.example.realestatemanager.ui
 
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 import com.example.realestatemanager.R
 import android.util.Log
 import android.widget.Toast
@@ -67,7 +69,10 @@ class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInt
                     intent.putExtra(INTENT_MAIN_TO_UPDATE, propertyId)
                     startActivity(intent)
                 } else {
-                    Toast.makeText(this, R.string.update_button_select_property_first, Toast.LENGTH_LONG).show()
+                    Snackbar.make(coordinatorLayout_main_activity,
+                        getString(R.string.update_button_select_property_first),
+                        Snackbar.LENGTH_LONG)
+                        .show()
                 }
                 true
             }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             android:id="@+id/property_detail_media_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="6dp"
             android:layout_marginBottom="10dp"/>
 
         <TextView
@@ -63,7 +63,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/baseline_settings_overscan_24"
-                    android:contentDescription="@string/surface"/>
+                    android:contentDescription="@string/surface"
+                    app:tint="@color/primary_dark" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -97,7 +98,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/baseline_home_24"
-                    android:contentDescription="@string/number_of_rooms"/>
+                    android:contentDescription="@string/number_of_rooms"
+                    app:tint="@color/primary_dark" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -131,7 +133,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/baseline_bathtub_24"
-                    android:contentDescription="@string/number_of_bathrooms"/>
+                    android:contentDescription="@string/number_of_bathrooms"
+                    app:tint="@color/primary_dark" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -165,7 +168,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/baseline_hotel_24"
-                    android:contentDescription="@string/number_of_bedrooms"/>
+                    android:contentDescription="@string/number_of_bedrooms"
+                    app:tint="@color/primary_dark" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -199,7 +203,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/baseline_beenhere_24"
-                    android:contentDescription="@string/location_of_interest"/>
+                    android:contentDescription="@string/location_of_interest"
+                    app:tint="@color/primary_dark" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -288,7 +293,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/location"
-                        android:src="@drawable/baseline_place_24"/>
+                        android:src="@drawable/baseline_place_24"
+                        app:tint="@color/primary_dark" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -347,7 +353,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/agent_in_charge"
-                        android:src="@drawable/baseline_person_24"/>
+                        android:src="@drawable/baseline_person_24"
+                        app:tint="@color/primary_dark" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -381,7 +388,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/agent_in_charge"
-                        android:src="@drawable/baseline_today_24"/>
+                        android:src="@drawable/baseline_today_24"
+                        app:tint="@color/primary_dark" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -416,7 +424,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/agent_in_charge"
-                        android:src="@drawable/baseline_today_24"/>
+                        android:src="@drawable/baseline_today_24"
+                        app:tint="@color/primary_dark" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -451,7 +460,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_margin="10dp"
-            android:background="@android:color/darker_gray">
+            android:background="@color/primary_light">
 
             <TextView
                 android:id="@+id/property_detail_maps_static_error"

@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.widget.CheckBox
 import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import androidx.core.widget.doAfterTextChanged
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
@@ -134,7 +135,7 @@ abstract class FormBaseActivity: AppCompatActivity(), IPickResult, FormMediaFrag
         form_full_name_agent.doAfterTextChanged { fullNameAgent = it.toString() }
         form_select_entry_date.setOnClickListener { initEntryDatePickerDialog() }
         form_cancel_button.setOnClickListener { finish() }
-        form_add_button.setOnClickListener {
+        form_validate_button.setOnClickListener {
             shareModelToTheViewModel()
         }
     }
@@ -156,11 +157,20 @@ abstract class FormBaseActivity: AppCompatActivity(), IPickResult, FormMediaFrag
             listFormPhotoAndWording.add(FormPhotoAndWording(null, null, photo!!, wording))
             shareListToMediaFormFragment()
         } else if (photo == null && wording.isNotEmpty()) {
-            Toast.makeText(applicationContext, R.string.form_error_media_photo, Toast.LENGTH_LONG).show()
+            Snackbar.make(coordinatorLayout_form_activity,
+                getString(R.string.form_error_media_photo),
+                Snackbar.LENGTH_LONG)
+                .show()
         } else if (photo != null && wording.isEmpty()) {
-            Toast.makeText(applicationContext, R.string.form_error_media_wording, Toast.LENGTH_LONG).show()
+            Snackbar.make(coordinatorLayout_form_activity,
+                getString(R.string.form_error_media_wording),
+                Snackbar.LENGTH_LONG)
+                .show()
         } else {
-            Toast.makeText(applicationContext, R.string.form_error_media_photo_wording, Toast.LENGTH_LONG).show()
+            Snackbar.make(coordinatorLayout_form_activity,
+                getString(R.string.form_error_media_photo_wording),
+                Snackbar.LENGTH_LONG)
+                .show()
         }
     }
 

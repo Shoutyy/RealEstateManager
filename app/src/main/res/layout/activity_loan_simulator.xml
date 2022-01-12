@@ -127,7 +127,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:background="@android:color/white">
 
                 <com.google.android.material.button.MaterialButton
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -136,6 +137,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_margin="10dp"
+                    app:strokeColor="@color/primary"
+                    android:textColor="@color/primary"
                     android:text="@string/cancel_form_button"/>
 
                 <com.google.android.material.button.MaterialButton
@@ -144,6 +147,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_margin="10dp"
+                    app:backgroundTint="@color/redAccent"
                     android:text="@string/estimating"/>
 
             </LinearLayout>

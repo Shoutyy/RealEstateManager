@@ -9,5 +9,11 @@
     <color name="white">#FFFFFFFF</color>
     <color name="primary">#BFBFBF</color>
     <color name="primary_dark">#6C6C6C</color>
+    <color name="primary_light">#CCC5C5</color>
     <color name="redAccent">#FF3344</color>
+    <color name="redAccentLight">#FF4949</color>
+    <color name="redAccentDark">#C60000</color>
+
+    <color name="textOnPrimary">#fafafa</color>
+    <color name="textOnAccent">#fafafa</color>
 </resources>

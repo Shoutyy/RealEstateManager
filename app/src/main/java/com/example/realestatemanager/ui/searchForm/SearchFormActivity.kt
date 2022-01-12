@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.util.Log
+import com.google.android.material.snackbar.Snackbar
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
@@ -155,13 +156,22 @@ class SearchFormActivity : AppCompatActivity() {
                 || dateLong > 0) {
                 searchFormViewModel.searchPropertiesId(searchFormModelRaw)
                     .observe(this@SearchFormActivity,
-                        Observer {
+                        Observer {if (it.isNotEmpty()) {
                             val intent = Intent(this@SearchFormActivity, ResultActivity::class.java)
                             intent.putExtra(INTENT_SEARCH_TO_RESULT, it.toIntArray())
                             startActivity(intent)
+                        } else {
+                            Snackbar.make(coordinatorLayout_search_activity,
+                                getString(R.string.search_no_property_found),
+                                Snackbar.LENGTH_LONG)
+                                .show()
+                        }
                         })
             }  else {
-                Log.e("goSearch", "nothing filled")
+                Snackbar.make(coordinatorLayout_search_activity,
+                    getString(R.string.search_no_criteria),
+                    Snackbar.LENGTH_LONG)
+                    .show()
             }
         }
     }
