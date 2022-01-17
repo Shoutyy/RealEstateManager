@@ -28,7 +28,7 @@ class AppContentProviderTest {
 
     private var db: AppDatabase? = null
     private var mContentResolver: ContentResolver? = null
-    private val PROPERTY_ID: Long = 14
+    private val PROPERTY_ID: Long = 12
 
     @Before
     fun setUp() {

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import com.example.realestatemanager.R
 import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.activity_property_detail.*
 import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
@@ -26,7 +27,9 @@ class PropertyDetailActivity : AppCompatActivity() {
 
         retrievesIntent()
         configureToolbar()
-        initAndAddFragment()
+        if (savedInstanceState == null) {
+            initAndAddFragment()
+        }
     }
 
     private fun retrievesIntent() {

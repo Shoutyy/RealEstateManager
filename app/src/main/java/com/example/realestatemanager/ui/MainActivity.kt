@@ -13,6 +13,8 @@ import androidx.core.view.GravityCompat
 import kotlinx.android.synthetic.main.activity_main.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import android.view.ViewGroup
+import android.util.Log
 import android.content.Intent
 import com.example.realestatemanager.ui.map.PICK_PROPERTY_DATA
 import com.example.realestatemanager.ui.form.FormBaseActivity
@@ -38,7 +40,11 @@ class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInt
         configureToolbar()
         configureDrawerLayout()
         configureNavigationView()
-        initAndAddFragment()
+        if (savedInstanceState == null) {
+            initAndAddFragment()
+        } else {
+            findsFragment()
+        }
     }
 
     private fun configureToolbar() { setSupportActionBar(toolbar) }
@@ -122,7 +128,7 @@ class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInt
     //fragment
     private var fragmentTransaction: FragmentTransaction = supportFragmentManager.beginTransaction()
     private val fragmentPropertyList = PropertyListFragment.newInstance()
-    private var fragmentPropertyDetail: PropertyDetailFragment? = null
+    private var fragmentPropertyDetail: Fragment? = null
     private var fragmentEmptyPropertyDetail: EmptyPropertyDetailFragment? = null
     private var containerPropertyDetail: Fragment? = supportFragmentManager.findFragmentById(R.id.activity_property_detail_container)
     private var propertyId: Int = 0
@@ -155,6 +161,16 @@ class MainActivity : AppCompatActivity(), PropertyListFragment.OnListFragmentInt
         fragmentPropertyDetail = PropertyDetailFragment.newInstance(propertyId)
         fragmentTransaction.add(R.id.activity_property_detail_container, fragmentPropertyDetail!!)
         fragmentTransaction.commit()
+    }
+
+    private fun findsFragment() {
+        supportFragmentManager.findFragmentById(R.id.activity_property_list_container)
+        if (containerPropertyDetail == null && activity_property_detail_container != null) {
+            fragmentPropertyDetail = supportFragmentManager.findFragmentById(R.id.activity_property_detail_container)
+            if (fragmentPropertyDetail == null) {
+                activity_property_list_container.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+            }
+        }
     }
 }
 
