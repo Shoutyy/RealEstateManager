@@ -1,9 +1,11 @@
 package com.example.realestatemanager.model
 
+import android.content.ContentValues
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.example.realestatemanager.database.converter.TypeConverter
 
 @Entity
 (foreignKeys = [ForeignKey(entity = Address::class,
@@ -27,5 +29,22 @@ class Property(
 ) {
     @Embedded var address: Address? = null
     @Embedded var agent: Agent? = null
+    companion object {
+        fun fromContentValues(values: ContentValues): Property =
+            Property(
+                type = TypeConverter.toType(values.getAsInteger("type")),
+                price = values.getAsLong("price"),
+                surface = values.getAsInteger("surface"),
+                rooms = values.getAsInteger("rooms"),
+                bedrooms = values.getAsInteger("bedrooms"),
+                bathrooms = values.getAsInteger("bathrooms"),
+                description = values.getAsString("description"),
+                addressId = values.getAsInteger("addressId"),
+                available = values.getAsBoolean("available"),
+                entryDate = values.getAsLong("entryDate"),
+                saleDate = values.getAsLong("saleDate"),
+                agentId = values.getAsInteger("agentId")
+            )
+    }
 }
 

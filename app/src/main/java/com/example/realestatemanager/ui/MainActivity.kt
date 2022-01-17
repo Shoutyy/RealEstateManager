@@ -2,11 +2,8 @@ package com.example.realestatemanager.ui
 
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.example.realestatemanager.R
-import android.util.Log
-import android.widget.Toast
 import android.os.Bundle
 import kotlinx.android.synthetic.main.toolbar.*
 import android.view.Menu

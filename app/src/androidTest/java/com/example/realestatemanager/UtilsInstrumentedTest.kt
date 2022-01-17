@@ -62,6 +62,17 @@ class UtilsInstrumentedTest {
     }
 
     @Test
+    fun checkIf_InternetIsAvailable_WifiEnableDataDisable() {
+        if (!wifiManager!!.isWifiEnabled) {
+            wifiManager?.isWifiEnabled = true
+        }
+        if (telephonyManager!!.isDataEnabled) {
+            telephonyManager?.isDataEnabled = false
+        }
+        assertEquals(true, Utils.isInternetAvailable(getApplicationContext<MainActivity>()))
+    }
+
+    @Test
     fun checkIf_InternetIsAvailable_WifiDisableDataDisable() {
         if (wifiManager!!.isWifiEnabled) {
             wifiManager?.isWifiEnabled = false

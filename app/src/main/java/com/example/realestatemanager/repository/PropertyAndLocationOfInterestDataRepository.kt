@@ -8,7 +8,9 @@ class PropertyAndLocationOfInterestDataRepository(private val propertyAndLocatio
 
     fun getLocationsOfInterest(propertyId: Int): LiveData<List<PropertyAndLocationOfInterest>> = propertyAndLocationOfInterestDao.getLocationsOfInterest(propertyId)
 
-    fun insertLocationOfInterest(propertyAndLocationOfInterest: PropertyAndLocationOfInterest) = propertyAndLocationOfInterestDao.insertLocationOfInterest(propertyAndLocationOfInterest)
+    fun insertLocationOfInterest(propertyAndLocationOfInterest: PropertyAndLocationOfInterest): Long = propertyAndLocationOfInterestDao.insertLocationOfInterest(propertyAndLocationOfInterest)
+
+    fun updatePropertyAndLocationOfInterest(propertyAndLocationOfInterest: PropertyAndLocationOfInterest): Int = propertyAndLocationOfInterestDao.updatePropertyAndLocationOfInterest(propertyAndLocationOfInterest)
 
     fun deleteLocationOfInterest(propertyId: Int, locationOfInterestId: Int) = propertyAndLocationOfInterestDao.deleteLocationOfInterest(propertyId, locationOfInterestId)
 

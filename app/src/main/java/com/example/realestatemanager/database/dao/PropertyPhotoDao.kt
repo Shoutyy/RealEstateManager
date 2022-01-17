@@ -10,7 +10,7 @@ interface PropertyPhotoDao {
     fun insertPropertyPhoto(propertyPhoto: PropertyPhoto): Long
 
     @Update(onConflict = OnConflictStrategy.ABORT)
-    fun updatePropertyPhoto(propertyPhoto: PropertyPhoto)
+    fun updatePropertyPhoto(propertyPhoto: PropertyPhoto): Int
 
     @Query("DELETE FROM PropertyPhoto WHERE :id == property_photo_id")
     fun deletePropertyPhoto(id: Int)

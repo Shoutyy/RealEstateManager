@@ -10,7 +10,9 @@ class PropertyAndPropertyPhotoDataRepository(private val propertyAndPropertyPhot
 
     fun getPropertyPhotos(propertyId: Int): LiveData<List<PropertyAndPropertyPhoto>> = propertyAndPropertyPhotoDao.getPropertyPhotos(propertyId)
 
-    fun insertPropertyPhoto(propertyAndPropertyPhoto: PropertyAndPropertyPhoto) = propertyAndPropertyPhotoDao.insertPropertyPhoto(propertyAndPropertyPhoto)
+    fun insertPropertyPhoto(propertyAndPropertyPhoto: PropertyAndPropertyPhoto): Long = propertyAndPropertyPhotoDao.insertPropertyPhoto(propertyAndPropertyPhoto)
+
+    fun updatePropertyAndPropertyPhoto(propertyAndPropertyPhoto: PropertyAndPropertyPhoto): Int = propertyAndPropertyPhotoDao.updatePropertyAndPropertyPhoto(propertyAndPropertyPhoto)
 
     fun deletePropertyPhoto(propertyId: Int, propertyPhotoId: Int) = propertyAndPropertyPhotoDao.deletePropertyPhoto(propertyId, propertyPhotoId)
 

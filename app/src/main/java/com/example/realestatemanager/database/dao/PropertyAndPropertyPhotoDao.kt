@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.example.realestatemanager.model.PropertyAndPropertyPhoto
 
 @Dao
@@ -16,7 +17,10 @@ interface PropertyAndPropertyPhotoDao {
     fun getPropertyPhotos(propertyId: Int): LiveData<List<PropertyAndPropertyPhoto>>
 
     @Insert
-    fun insertPropertyPhoto(PropertyAndPropertyPhoto: PropertyAndPropertyPhoto)
+    fun insertPropertyPhoto(propertyAndPropertyPhoto: PropertyAndPropertyPhoto): Long
+
+    @Update
+    fun updatePropertyAndPropertyPhoto(propertyAndPropertyPhoto: PropertyAndPropertyPhoto): Int
 
     @Query("DELETE FROM PropertyAndPropertyPhoto WHERE :propertyId = propertyId AND :propertyPhotoId = propertyPhotoId")
     fun deletePropertyPhoto(propertyId: Int, propertyPhotoId: Int)
