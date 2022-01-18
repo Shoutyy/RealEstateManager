@@ -21,6 +21,7 @@ import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.io.IOException
 import java.util.*
 
 @RunWith(AndroidJUnit4::class)
@@ -28,15 +29,22 @@ class AppContentProviderTest {
 
     private var db: AppDatabase? = null
     private var mContentResolver: ContentResolver? = null
-    private val PROPERTY_ID: Long = 12
+    private val PROPERTY_ID: Long = 11
 
     @Before
     fun setUp() {
+        InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase("Database.db")
         db = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().context,
             AppDatabase::class.java)
             .allowMainThreadQueries()
             .build()
         mContentResolver = InstrumentationRegistry.getInstrumentation().context.contentResolver
+    }
+
+    @After
+    @Throws(IOException::class)
+    fun closeDb() {
+        InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase("Database.db")
     }
 
     @Test
