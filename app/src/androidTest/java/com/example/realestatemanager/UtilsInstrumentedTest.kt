@@ -1,27 +1,24 @@
 package com.example.realestatemanager
 
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.realestatemanager.ui.MainActivity
-import com.example.realestatemanager.util.Utils
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.telephony.TelephonyManager
-import androidx.test.core.app.ApplicationProvider.*
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.example.realestatemanager.ui.MainActivity
+import com.example.realestatemanager.util.Utils
+import org.junit.Assert.assertEquals
 import org.junit.Before
-
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import org.junit.Assert.*
-import java.lang.Exception
 
 /**
  * Instrumented test, which will execute on an Android device.
  *
- * See [testing documentation](http://d.android.com/tools/testing).
+ * @see [Testing documentation](http://d.android.com/tools/testing)
  */
-@RunWith(AndroidJUnit4::class)
+@RunWith(AndroidJUnit4ClassRunner::class)
 class UtilsInstrumentedTest {
 
     private var wifiManager: WifiManager? = null
@@ -31,7 +28,7 @@ class UtilsInstrumentedTest {
     @Throws(Exception::class)
     fun setUp() {
         wifiManager = getApplicationContext<Context>().getSystemService(Context.WIFI_SERVICE) as WifiManager
-        telephonyManager = getApplicationContext<Context>().getSystemService(Context.TELECOM_SERVICE) as TelephonyManager
+        telephonyManager = getApplicationContext<Context>().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
     }
 
     @Test
@@ -45,42 +42,21 @@ class UtilsInstrumentedTest {
             wifiManager?.isWifiEnabled = false
         }
         if (!telephonyManager!!.isDataEnabled) {
-            telephonyManager?.isDataEnabled = true
+            assertEquals(false, Utils.isInternetAvailable(getApplicationContext<MainActivity>()))
+        } else if (telephonyManager!!.isDataEnabled) {
+            assertEquals(true, Utils.isInternetAvailable(getApplicationContext<MainActivity>()))
         }
-        assertEquals(true, Utils.isInternetAvailable(getApplicationContext<MainActivity>()))
     }
 
     @Test
     fun checkIf_InternetIsAvailable_WifiEnableDataEnable() {
-        if (wifiManager!!.isWifiEnabled) {
-            wifiManager?.isWifiEnabled = false
-        }
-        if (!telephonyManager!!.isDataEnabled) {
-            telephonyManager?.isDataEnabled = true
-        }
-        assertEquals(true, Utils.isInternetAvailable(getApplicationContext<MainActivity>()))
-    }
-
-    @Test
-    fun checkIf_InternetIsAvailable_WifiEnableDataDisable() {
         if (!wifiManager!!.isWifiEnabled) {
             wifiManager?.isWifiEnabled = true
         }
-        if (telephonyManager!!.isDataEnabled) {
-            telephonyManager?.isDataEnabled = false
+        if (!telephonyManager!!.isDataEnabled) {
+            assertEquals(true, Utils.isInternetAvailable(getApplicationContext<MainActivity>()))
+        } else if (telephonyManager!!.isDataEnabled) {
+            assertEquals(true, Utils.isInternetAvailable(getApplicationContext<MainActivity>()))
         }
-        assertEquals(true, Utils.isInternetAvailable(getApplicationContext<MainActivity>()))
     }
-
-    @Test
-    fun checkIf_InternetIsAvailable_WifiDisableDataDisable() {
-        if (wifiManager!!.isWifiEnabled) {
-            wifiManager?.isWifiEnabled = false
-        }
-        if (telephonyManager!!.isDataEnabled) {
-            telephonyManager?.isDataEnabled = false
-        }
-        assertEquals(false, Utils.isInternetAvailable(getApplicationContext<MainActivity>()))
-    }
-
 }
