@@ -28,3 +28,5 @@ L’application est utilisable sur smartphone et tablette en mode portrait et pa
 * Room
 * RxJava
 * Google Maps API
+* PickImage
+* Glide
